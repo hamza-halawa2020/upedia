@@ -6,6 +6,35 @@ Move the active Upedia Laravel applications into `D:/hamza/upedia-all` as one mo
 
 ## IT Migration Progress
 
+## Current Review: Attachments
+
+- Shared uploads now live in `App/Actions/Attachments/StoreAttachments`.
+  Marketing Plans/Scripts/Complaints delegate to it instead of duplicate storage code.
+- IT Solutions/Tickets/Purchases accept validated PDF/JPG/PNG uploads, max five
+  files at 5 MB each. Forms use multipart encoding; files append on edit.
+- IT owner writes and attachment rows share a transaction through WithAttachments.
+  Unique filenames prevent same-second collisions; immediate failures clean stored files.
+- Existing public upload paths remain compatible. Files are not yet private;
+  protected downloads and deletion/lifecycle migration remain pending.
+- An outer transaction rollback after a successful upload, or a commit failure,
+  still requires filesystem reconciliation; there is no distributed transaction.
+- Previous Feature tests were removed in the current worktree. Do not restore
+  those deletions implicitly or quote their historical counts as current verification.
+- This is an incremental audit; neither domain is declared fully migrated.
+
+## Prior IT Migration History
+
+- `/it/reports` is registered with `it_reports_index` authorization and a date
+  FormRequest. Source calculations are extracted into ReportWindow, ReportTotals,
+  ReportClassification, ReportResolution, ReportPatterns and ReportCharts queries.
+- Report displays classifications, department load, resolution durations/notes,
+  recurring issues, time/network patterns, reopened tickets, live totals and trends.
+- UI uses compact tables rather than the original graphical charts. Exact source
+  visual parity and browser verification remain pending.
+- Overdue uses the stored business deadline, consistent with migrated dashboard;
+  source priority-hours SQL was intentionally not reused. Report query calculations
+  are tested on SQLite, but MySQL-specific SQL must also be verified in staging.
+
 - `/it/`, `/it/statistics`, `/it/asset-dashboard` now have domain controllers,
   aggregate status counts, bounded latest/overdue lists and grouped asset counts.
 - Dashboard parity is partial: source charts, last-week staff workload and richer

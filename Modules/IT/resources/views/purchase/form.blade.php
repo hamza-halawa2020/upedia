@@ -3,7 +3,7 @@
 <div class="app-bg"><div class="page-shell">
     <x-page-title :title="$purchase ? 'Edit Purchase' : 'Add Purchase'" />
     @if($errors->any())<ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>@endif
-    <form method="POST" action="{{ $purchase ? route('it.purchase.update', $purchase->id) : route('it.purchase.store') }}">
+    <form method="POST" enctype="multipart/form-data" action="{{ $purchase ? route('it.purchase.update', $purchase->id) : route('it.purchase.store') }}">
         @csrf @if($purchase) @method('PUT') @endif
         @foreach(['purchase_number' => 'Number', 'name' => 'Name', 'required_by' => 'Required By', 'shipping_cost' => 'Shipping'] as $field => $label)
             <label class="form-label" for="{{ $field }}">{{ $label }}</label>
@@ -39,18 +39,20 @@
         </div>
         <button type="button" id="add-item" class="btn btn-outline-secondary"><iconify-icon icon="lucide:plus"></iconify-icon> Add Item</button>
         <button type="submit" class="btn btn-primary"><iconify-icon icon="lucide:save"></iconify-icon> Save</button>
+        <label class="form-label" for="attachments">Attachments</label>
+        <input id="attachments" type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png" class="form-control mb-3">
     </form>
 </div></div>
 <script>
-document.getElementById('add-item').addEventListener('click', () => {
-    const container = document.getElementById('purchase-items');
-    const item = container.firstElementChild.cloneNode(true);
-    const index = Date.now();
-    item.querySelectorAll('input').forEach(input => {
-        input.name = `items[${index}][${input.dataset.field}]`;
-        input.value = input.dataset.field === 'qty' ? 1 : '';
+    document.getElementById('add-item').addEventListener('click', () => {
+        const container = document.getElementById('purchase-items');
+        const item = container.firstElementChild.cloneNode(true);
+        const index = Date.now();
+        item.querySelectorAll('input').forEach(input => {
+            input.name = `items[${index}][${input.dataset.field}]`;
+            input.value = input.dataset.field === 'qty' ? 1 : '';
+        });
+        container.appendChild(item);
     });
-    container.appendChild(item);
-});
 </script>
 @endsection

@@ -21,6 +21,8 @@ class SaveSolutionRequest extends FormRequest
             'keywords' => ['nullable', 'string'],
             'visibility' => ['required', Rule::in(['all', 'it_only', 'departments'])],
             'department_ids' => ['required_if:visibility,departments', 'array'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
             'department_ids.*' => ['integer', 'distinct', 'exists:sm_human_departments,id'],
         ];
     }

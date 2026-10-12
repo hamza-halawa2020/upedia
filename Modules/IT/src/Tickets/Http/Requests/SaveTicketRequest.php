@@ -24,6 +24,7 @@ class SaveTicketRequest extends FormRequest
             'requester_id' => ['required', 'integer', 'exists:sm_staffs,id'],
             'assigned_to' => ['nullable', 'integer', 'exists:sm_staffs,id'],
             'status' => ['required', Rule::in(['open', 'closed', 'pending', 'in_progress'])],
-            'attachments' => ['prohibited']];
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120']];
     }
 }

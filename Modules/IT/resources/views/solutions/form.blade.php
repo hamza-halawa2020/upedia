@@ -3,7 +3,7 @@
 <div class="app-bg"><div class="page-shell">
     <x-page-title :title="$solution ? 'Edit Solution' : 'Add Solution'" />
     @if($errors->any())<ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>@endif
-    <form method="POST" action="{{ $solution ? route('it.it-solutions.update', $solution->id) : route('it.it-solutions.store') }}">
+    <form method="POST" enctype="multipart/form-data" action="{{ $solution ? route('it.it-solutions.update', $solution->id) : route('it.it-solutions.store') }}">
         @csrf @if($solution) @method('PUT') @endif
         @foreach(['title' => 'Title', 'topic_name' => 'Topic', 'keywords' => 'Keywords'] as $field => $label)
             <label for="{{ $field }}" class="form-label">{{ $label }}</label>
@@ -25,6 +25,8 @@
         </fieldset>
         <button type="submit" class="btn btn-primary"><iconify-icon icon="lucide:save"></iconify-icon> Save</button>
         <a href="{{ route('it.it-solutions.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        <label class="form-label" for="attachments">Attachments</label>
+        <input id="attachments" type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png" class="form-control mb-3">
     </form>
 </div></div>
 @endsection

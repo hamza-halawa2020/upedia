@@ -13,10 +13,10 @@ class SaveTicket
 
     public function handle(array $data, int $actorId, ?int $id = null): Ticket
     {
-        return DB::transaction(function () use ($data, $actorId, $id) {
+        return app(\App\Actions\Attachments\WithAttachments::class)->handle($data['attachments'] ?? [], 'tickets', function () use ($data, $actorId, $id) {
             $ticket = $id ? Ticket::lockForUpdate()->findOrFail($id) : new Ticket;
             $oldStatus = $ticket->status;
-            $ticket->fill($data);
+            $ticket->fill(\Illuminate\Support\Arr::except($data, ['attachments']));
             if (! $id) {
                 $ticket->created_by = $actorId;
             }

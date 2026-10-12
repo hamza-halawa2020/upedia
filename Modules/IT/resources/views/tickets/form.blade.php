@@ -40,7 +40,9 @@
                 @endforeach
                 <button type="submit" class="btn btn-primary"><iconify-icon icon="lucide:save"></iconify-icon> Save</button>
                 <a href="{{ route('it.tickets.index') }}" class="btn btn-outline-secondary">Cancel</a>
-            </form>
+                <label class="form-label" for="attachments">Attachments</label>
+        <input id="attachments" type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png" class="form-control mb-3">
+    </form>
         </div>
     </div>
     <script>

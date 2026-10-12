@@ -28,6 +28,7 @@ class SavePurchaseRequest extends FormRequest
             'items.*.qty' => ['required', 'numeric', 'min:1'],
             'items.*.unit_price' => ['required', 'numeric', 'min:0'],
             'items.*.tax' => ['nullable', 'numeric', 'min:0'],
-            'attachments' => ['prohibited'], 'status' => ['prohibited']];
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'], 'status' => ['prohibited']];
     }
 }

@@ -10,9 +10,9 @@ class SaveSolution
 {
     public function handle(array $data, ?int $id = null): ItSolution
     {
-        return DB::transaction(function () use ($data, $id) {
+        return app(\App\Actions\Attachments\WithAttachments::class)->handle($data['attachments'] ?? [], 'solutions', function () use ($data, $id) {
             $solution = $id ? ItSolution::lockForUpdate()->findOrFail($id) : new ItSolution();
-            $solution->fill(Arr::except($data, ['department_ids']))->save();
+            $solution->fill(Arr::except($data, ['department_ids', 'attachments']))->save();
             $solution->departments()->sync($data['visibility'] === 'departments' ? $data['department_ids'] : []);
 
             return $solution;

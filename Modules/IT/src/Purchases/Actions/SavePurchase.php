@@ -11,7 +11,7 @@ class SavePurchase
 {
     public function handle(array $data, ?int $id = null): Purchase
     {
-        return DB::transaction(function () use ($data, $id) {
+        return app(\App\Actions\Attachments\WithAttachments::class)->handle($data['attachments'] ?? [], 'purchases', function () use ($data, $id) {
             $purchase = $id ? Purchase::where('invoice_type', 'purchase')->lockForUpdate()->findOrFail($id) : new Purchase;
             if ($id && $purchase->status !== 'pending') {
                 throw ValidationException::withMessages(['purchase' => 'Only pending purchases can be edited.']);
