@@ -6,6 +6,22 @@ Move the active Upedia Laravel applications into `D:/hamza/upedia-all` as one mo
 
 ## IT Migration Progress
 
+- `/it/`, `/it/statistics`, `/it/asset-dashboard` now have domain controllers,
+  aggregate status counts, bounded latest/overdue lists and grouped asset counts.
+- Dashboard parity is partial: source charts, last-week staff workload and richer
+  live metrics still need migration. Overdue uses stored business deadline rather
+  than the legacy priority-hours expression.
+- POST `/it/updateStatus` and `/it/updateStatus/purchase` now lock state and prevent
+  duplicate financial postings. Dedicated permissions are `it_expenses_update_status`
+  and `it_purchase_update_status`; provision and assign them explicitly.
+- Firebase configuration is in Notifications at `/firebase-configs`, not IT.
+  It requires `notifications_config_manage`, validates working hours and writes ID 1.
+- `/it/reports` is still pending the source's detailed reporting workflow; do not
+  label a summary dashboard as full report migration.
+
+- `/it/vendors/save-filtered-table` now saves filtered Excel exports through
+  the shared SaveExportTable action, guarded by `it_vendors_index` permission.
+
 - Ticket resource/export/saved-table and all three staff lookup routes are now
   registered under `/it/tickets`. Staff API success responses use the shared
   responder with `data`; endpoints require ticket creation permission.
