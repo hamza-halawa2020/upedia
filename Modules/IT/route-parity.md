@@ -12,6 +12,8 @@ This inventory is not a claim that the domain migration is complete.
 - `/ticket-items`, `/ticket-categories`, `/ticket-priorities`: resource routes,
   sharing the ticket configuration implementation without duplicate CRUD logic.
 - `/solutions`, `/solutions/{id}`: visibility-controlled browsing.
+- `/it-solutions`: administration resource; attachment upload/download/deletion
+  remains pending. Deletion is blocked for solutions with existing attachments.
 
 ## Pending Controller And Workflow Migration
 
@@ -24,7 +26,6 @@ This inventory is not a claim that the domain migration is complete.
 - `/tickets/staff-search` and `/tickets/staff-details/{staffId}`.
 - `/vendors/save-filtered-table` and PDF export.
 - `/`: IT dashboard.
-- `/it-solutions`: solution administration resource.
 - `/statistics` and `/asset-dashboard`.
 - POST `/updateStatus` and `/updateStatus/purchase`.
 - `/reports`.
