@@ -25,6 +25,7 @@ class MarketingPlanController extends Controller
         $this->middleware('check.permission:marketing_plans_index')->only(['index']);
         $this->middleware('check.permission:marketing_plans_create')->only(['create', 'store']);
         $this->middleware('check.permission:marketing_plans_show')->only(['show']);
+        $this->middleware('check.permission:marketing_plans_edit')->only(['edit', 'update']);
         $this->middleware('check.permission:marketing_plans_destroy')->only(['destroy']);
     }
 
@@ -97,4 +98,3 @@ class MarketingPlanController extends Controller
         return Excel::download(new MarketingPlansExport($items), $filename);
     }
 }
-

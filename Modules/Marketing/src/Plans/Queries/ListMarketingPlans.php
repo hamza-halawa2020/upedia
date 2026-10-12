@@ -11,15 +11,13 @@ use Modules\Marketing\Plans\Filters\MarketingPlanFilters;
 
 class ListMarketingPlans
 {
-    public function __construct(private readonly MarketingPlanFilters $filters)
-    {
-    }
+    public function __construct(private readonly MarketingPlanFilters $filters) {}
 
     public function paginate(array $criteria, User $user): LengthAwarePaginator
     {
         return $this->baseQuery($criteria, $user)
             ->orderByDesc('publish_date')
-            ->paginate($this->perPage($criteria));
+            ->paginate($this->perPage($criteria))->withQueryString();
     }
 
     public function collection(array $criteria, User $user): Collection
@@ -46,4 +44,3 @@ class ListMarketingPlans
         return (int) ($criteria['per_page'] ?? 10);
     }
 }
-

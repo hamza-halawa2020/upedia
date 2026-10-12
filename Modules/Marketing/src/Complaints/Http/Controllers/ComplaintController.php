@@ -18,6 +18,15 @@ use Modules\Marketing\Complaints\Queries\ListSalesStaff;
 
 class ComplaintController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('check.permission:marketing_complains_index')->only(['index']);
+        $this->middleware('check.permission:marketing_complains_create')->only(['create', 'store', 'checkLeads']);
+        $this->middleware('check.permission:marketing_complains_show')->only(['show']);
+        $this->middleware('check.permission:marketing_complains_edit')->only(['edit', 'update']);
+        $this->middleware('check.permission:marketing_complains_destroy')->only(['destroy']);
+    }
+
     public function index(ListComplaintsRequest $request, ListComplaints $listComplaints, ListSalesStaff $listSalesStaff)
     {
         return view('marketing::complaints.index', [

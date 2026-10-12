@@ -4,15 +4,16 @@ namespace Modules\Marketing\Plans\Queries;
 
 use App\Models\MarketingPlan;
 use Illuminate\Support\Collection;
+use Modules\Marketing\Plans\Filters\CalendarFilters;
 
 class ListCalendarEvents
 {
+    public function __construct(private readonly CalendarFilters $filters) {}
+
     public function handle(array $criteria): Collection
     {
-        return MarketingPlan::query()
+        return $this->filters->apply(MarketingPlan::query(), $criteria)
             ->with(['staff:id,first_name,last_name'])
-            ->when($criteria['statuses'] ?? null, fn ($q, $statuses) => $q->whereIn('status', explode(',', $statuses)))
-            ->when($criteria['platforms'] ?? null, fn ($q, $platforms) => $q->whereIn('platform', explode(',', $platforms)))
             ->get()
             ->map(fn (MarketingPlan $plan) => $this->event($plan));
     }
@@ -44,4 +45,3 @@ class ListCalendarEvents
         };
     }
 }
-
