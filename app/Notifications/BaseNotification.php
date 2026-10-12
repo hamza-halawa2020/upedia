@@ -50,12 +50,12 @@ class BaseNotification extends Notification implements ShouldBroadcastNow
 
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
-        return new BroadcastMessage([
+        return (new BroadcastMessage([
             'notification' => $this->getData($notifiable),
             'created_at' => now()->toDateTimeString(),
             'id' => $this->id,
             'type' => class_basename($this),
-        ]);
+        ]))->onQueue(config('notifications.queue', 'upedia-all-notifications'));
     }
 
     protected function getData(object $notifiable): array

@@ -1,11 +1,22 @@
 # Marketing And IT Verification Runbook
 
+## Reverb Configuration Update
+
+- Reverb is installed, registered and tested on localhost:8080. A signed synthetic
+  broadcast was accepted; private user-channel authorization tests pass.
+- New notification broadcasts and local workers use upedia-all-notifications.
+  Imported default-queue jobs were not deleted or retried. Missing legacy job
+  classes remain the responsibility of their original domains.
+- Firebase service-account OAuth succeeds. Browser receipt, HTTPS/WSS and actual
+  user push delivery are still unverified. Server configuration is not final sign-off.
+- See [Local Reverb Setup](reverb-local-setup.md) for commands and limitations.
+
 Target: `D:/hamza/upedia-all`. Do not run deployment steps against the shared
 database until a backup, role mapping and rollout approval are available.
 
 ## Verified On 2026-10-12
 
-- Full current PHPUnit suite: 41 tests, 173 assertions, isolated SQLite.
+- Full current PHPUnit suite: 43 tests, 178 assertions, isolated SQLite.
 - Dedicated MySQL 8 container: 11 assertions covering deadline DATETIME type,
   legacy TIME preservation, migration rollback/reapply, SLA hours plus item
   minutes, deadline reconstruction preview/apply and selected report SQL.

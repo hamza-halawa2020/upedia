@@ -1,12 +1,23 @@
 # Marketing And IT Review
 
+## Reverb Configuration Update
+
+- Reverb is installed, registered and tested on localhost:8080. A signed synthetic
+  broadcast was accepted; private user-channel authorization tests pass.
+- New notification broadcasts and local workers use upedia-all-notifications.
+  Imported default-queue jobs were not deleted or retried. Missing legacy job
+  classes remain the responsibility of their original domains.
+- Firebase service-account OAuth succeeds. Browser receipt, HTTPS/WSS and actual
+  user push delivery are still unverified. Server configuration is not final sign-off.
+- See [Local Reverb Setup](reverb-local-setup.md) for commands and limitations.
+
 Current target: `D:/hamza/upedia-all`.
 Sources remain unchanged: `marketing.upedia` and `it.upedia`.
 
 ## Acceptance Attempt: 2026-10-12
 
 - Independent local test database confirmed by the user.
-- 41 tests pass (173 assertions); all 681 migrations and DatabaseSeeder pass
+- 43 tests pass (178 assertions); all 681 migrations and DatabaseSeeder pass
   in a separate disposable MySQL schema with external delivery disabled.
 - Authenticated local HTTP smoke checks pass for 33 routes. These are server
   response checks, not browser interaction or complete CRUD tests.
@@ -106,7 +117,7 @@ Sources remain unchanged: `marketing.upedia` and `it.upedia`.
 
 ## Verification
 
-41 tests pass (173 assertions), plus 11 isolated MySQL assertions. All 681 migrations and DatabaseSeeder pass in a separate disposable schema.
+43 tests pass (178 assertions), plus 11 isolated MySQL assertions. All 681 migrations and DatabaseSeeder pass in a separate disposable schema.
 Previous Blade compilation passed. Scoped 200-line checks pass.
 Browser, external delivery and live rollout remain unverified.
 This is not a full migration sign-off.

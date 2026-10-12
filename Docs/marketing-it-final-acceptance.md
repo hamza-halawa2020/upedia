@@ -1,5 +1,16 @@
 # Marketing And IT Final Acceptance
 
+## Reverb Configuration Update
+
+- Reverb is installed, registered and tested on localhost:8080. A signed synthetic
+  broadcast was accepted; private user-channel authorization tests pass.
+- New notification broadcasts and local workers use upedia-all-notifications.
+  Imported default-queue jobs were not deleted or retried. Missing legacy job
+  classes remain the responsibility of their original domains.
+- Firebase service-account OAuth succeeds. Browser receipt, HTTPS/WSS and actual
+  user push delivery are still unverified. Server configuration is not final sign-off.
+- See [Local Reverb Setup](reverb-local-setup.md) for commands and limitations.
+
 Date: 2026-10-12. Target: `D:/hamza/upedia-all`.
 Local test URL: `http://upedia-all.test`.
 
@@ -17,7 +28,7 @@ No login password is stored in the verification scripts or documentation.
 
 | Check | Result | Scope |
 | --- | --- | --- |
-| Current PHPUnit suite | PASS: 41 tests, 173 assertions | Isolated SQLite; includes permission seeder idempotency |
+| Current PHPUnit suite | PASS: 43 tests, 178 assertions | Isolated SQLite; includes permission seeder idempotency |
 | Selected MySQL assertions | PASS: 11 | Deadline schema/rollback, SLA hours, selected report SQL |
 | Fresh MySQL installation | PASS: all 681 migrations | Disposable Docker schema, not the shared database |
 | DatabaseSeeder | PASS | Disposable Docker schema; external delivery faked |

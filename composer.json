@@ -16,6 +16,7 @@
         "doctrine/inflector": "^2.1",
         "laravel/framework": "^11.0",
         "laravel/passport": "*",
+        "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.1",
         "laravel/telescope": "*",
         "laravel/tinker": "^2.9",
