@@ -159,5 +159,4 @@
     <script src="{{ asset('assets/js/notification-feed.js') }}"></script>
     @include('notifications::partials.interactions')
     @include('notifications::partials.firebase-client')
-    @include('notifications::partials.reverb-client')
 @endpush

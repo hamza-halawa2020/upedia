@@ -113,7 +113,7 @@ class MarketingNotificationService
             ->filter()
             ->unique('id')
             ->reject(fn (User $user) => $authId && $user->id === $authId)
-            ->each(fn (User $user) => $user->notify(new BaseNotification($message, $title, ['database', 'broadcast'], $url)));
+            ->each(fn (User $user) => $user->notify(new BaseNotification($message, $title, ['database'], $url)));
     }
 
     private function modelName(Model $model): string

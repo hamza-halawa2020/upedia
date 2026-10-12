@@ -15,7 +15,7 @@ class NotifyActor
         }
 
         DB::afterCommit(fn () => $actor->notify(
-            new BaseNotification($message, $title, ['database', 'broadcast'], $route)
+            new BaseNotification($message, $title, ['database'], $route)
         ));
     }
 }

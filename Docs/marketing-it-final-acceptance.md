@@ -1,5 +1,14 @@
 # Marketing And IT Final Acceptance
 
+## Current Decision: Firebase Only
+
+Reverb and browser WebSocket subscriptions were removed at the user's request.
+Stored notifications remain; new realtime delivery uses the shared FirebaseChannel.
+No existing jobs were deleted or retried. Previous Reverb evidence is historical,
+not the current architecture. See [Firebase Setup](firebase-only-setup.md).
+Current regression suite: 44 tests, 183 assertions. Firebase browser receipt still
+needs an active token and a controlled delivery check.
+
 ## Reverb Configuration Update
 
 - Reverb is installed, registered and tested on localhost:8080. A signed synthetic

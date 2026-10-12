@@ -2,14 +2,12 @@
 
 namespace App\Notifications;
 
-use App\Services\Notifications\FirebaseNotificationService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Modules\Notifications\Channels\FirebaseChannel;
 
-class BaseNotification extends Notification implements ShouldBroadcastNow
+class BaseNotification extends Notification
 {
     use Queueable;
 
@@ -28,60 +26,42 @@ class BaseNotification extends Notification implements ShouldBroadcastNow
         $this->message = $message;
         $this->title = $title;
         $this->channel = $channel;
-
-        if (is_array($action_url)) {
-            $this->action_url = route(...$action_url);
-        } elseif (is_string($action_url) && str_starts_with($action_url, 'http')) {
-            $this->action_url = $action_url;
-        } elseif (is_string($action_url)) {
-            $this->action_url = route($action_url);
-        } else {
-            $this->action_url = null;
-        }
+        $this->action_url = is_array($action_url) ? route(...$action_url)
+            : (is_string($action_url) && ! str_starts_with($action_url, 'http') ? route($action_url) : $action_url);
     }
 
     public function via(object $notifiable): array
     {
-        return $this->channel;
+        // Older callers may still request broadcast; Firebase replaces that transport.
+        $channels = array_values(array_filter($this->channel, fn ($channel) => $channel !== 'broadcast'));
+        if ($this->sendPush && (in_array('database', $channels, true) || in_array('broadcast', $this->channel, true))) {
+            $channels[] = FirebaseChannel::class;
+        }
+
+        return array_values(array_unique($channels));
     }
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line($this->message)
+        return (new MailMessage)->line($this->message)
             ->action($this->title, $this->action_url ?? url('/'))
             ->line('Thank you for using our application!');
     }
 
-    public function toBroadcast(object $notifiable): BroadcastMessage
-    {
-        return (new BroadcastMessage([
-            'notification' => $this->getData($notifiable),
-            'created_at' => now()->toDateTimeString(),
-            'id' => $this->id,
-            'type' => class_basename($this),
-        ]))->onQueue(config('notifications.queue', 'upedia-all-notifications'));
-    }
-
     protected function getData(object $notifiable): array
     {
-        return [
-            'notification_id' => $this->id,
-            'message' => $this->message,
-            'title' => $this->title,
-            'action_url' => $this->action_url ?? route('dashboard'),
-        ];
+        return ['notification_id' => $this->id, 'message' => $this->message,
+            'title' => $this->title, 'action_url' => $this->action_url ?? route('dashboard')];
     }
 
     public function toDatabase(object $notifiable): array
     {
-        $data = $this->getData($notifiable);
+        return $this->getData($notifiable);
+    }
 
-        if ($this->sendPush && method_exists($notifiable, 'deviceTokens')) {
-            app(FirebaseNotificationService::class)->sendToUser($notifiable, $data);
-        }
-
-        return $data;
+    public function toFirebase(object $notifiable): array
+    {
+        return $this->getData($notifiable);
     }
 
     public function toArray(object $notifiable): array

@@ -1,5 +1,14 @@
 # Local Reverb And Queue Setup
 
+## Current Decision: Firebase Only
+
+Reverb and browser WebSocket subscriptions were removed at the user's request.
+Stored notifications remain; new realtime delivery uses the shared FirebaseChannel.
+No existing jobs were deleted or retried. Previous Reverb evidence is historical,
+not the current architecture. See [Firebase Setup](firebase-only-setup.md).
+Current regression suite: 44 tests, 183 assertions. Firebase browser receipt still
+needs an active token and a controlled delivery check.
+
 Target: `D:/hamza/upedia-all`. Reverb is installed and registered.
 The server binds to localhost only, using port 8080 and HTTP for local testing.
 Configure TLS/reverse proxy before HTTPS browser use or production deployment.
