@@ -6,7 +6,7 @@ Reverb and browser WebSocket subscriptions were removed at the user's request.
 Stored notifications remain; new realtime delivery uses the shared FirebaseChannel.
 No existing jobs were deleted or retried. Previous Reverb evidence is historical,
 not the current architecture. See [Firebase Setup](firebase-only-setup.md).
-Current regression suite: 54 tests, 967 assertions, plus five isolated JavaScript
+Current regression suite: 61 tests, 1106 assertions, plus five isolated JavaScript
 service-worker checks. The user confirmed foreground reception, then background
 display exactly once with the correct notification-page link on 2026-10-12.
 
@@ -26,9 +26,13 @@ Local test URL: `https://upedia-all.test`.
 
 ## Decision
 
-**Not signed off for final migration or production deployment.** The checks below
-pass, including controlled Firebase delivery, but they do not establish complete
-CRUD/interaction parity or migration of original data and files.
+**Scope confirmed by the user: code acceptance in the new project only.**
+Production data/file transfer, retirement of the source applications and production
+deployment approval are explicitly out of scope, not blockers for this decision.
+
+**Code acceptance remains unsigned.** The checks below pass, including controlled
+Firebase delivery, but do not establish complete workflow and browser interaction
+parity for every feature.
 
 The user confirmed the local project has an independent test database and
 approved assigning the three new permissions to Super admin only.
@@ -38,11 +42,14 @@ No login password is stored in the verification scripts or documentation.
 
 | Check | Result | Scope |
 | --- | --- | --- |
-| Current PHPUnit suite | PASS: 54 tests, 967 assertions | Isolated SQLite; includes structural route coverage, not full browser CRUD |
+| Current PHPUnit suite | PASS: 61 tests, 1106 assertions | Isolated SQLite; includes structural route coverage, not full browser CRUD |
 | Source business route coverage | PASS | Both domains' resource and special endpoints, resolvable actions, static matching and no duplicate module method/URI pairs |
 | Firebase service-worker checks | PASS: 5 | Isolated JavaScript mocks; display ownership, stable tag, click order, URL safety and existing-window focus |
 | IT product HTTP lifecycle | PASS | Create/update/delete, dependent deletion isolation, validation and restricted-user denial |
 | Marketing Quick Links lifecycle | PASS | HTTP create/update/delete, department synchronization, validation, permission denial and rollback on failed synchronization |
+| IT vendor HTTP lifecycle | PASS | Create/update/delete, isolation of dependent deletion, invalid input preservation and restricted-user denial |
+| Marketing plan HTTP lifecycle | PASS | Create/update/delete, staff ownership, input validation and atomic rollback on attachment failure |
+| Permission-guarded domain endpoints | PASS: 96 requests denied | Ungranted authenticated user; permission middleware now precedes route model binding |
 | Selected MySQL assertions | PASS: 11 | Deadline schema/rollback, SLA hours, selected report SQL |
 | Fresh MySQL installation | PASS: all 681 migrations | Disposable Docker schema, not the shared database |
 | DatabaseSeeder | PASS | Disposable Docker schema; external delivery faked |
@@ -53,7 +60,7 @@ No login password is stored in the verification scripts or documentation.
 | Browser interaction/screenshots | NOT VERIFIED | Browser connector unavailable; HTTP checks are not visual checks |
 | Complete CRUD and source parity | NOT VERIFIED | HTTP smoke checks do not create/update/delete business records |
 | Firebase delivery | PASS: local controlled test | User confirmed foreground receipt and background display once with working link; no Reverb requirement |
-| Original data/file migration | NOT VERIFIED | Empty test attachment preview is not production evidence |
+| Original data/file migration | OUT OF SCOPE | User requested code acceptance only; no retirement or production transfer authorized |
 
 ## Changes Made During Acceptance
 
@@ -64,6 +71,9 @@ No login password is stored in the verification scripts or documentation.
 - Corrected the local APP_URL to include HTTPS. Changed web push to data-only,
   prevented manual redisplay of Firebase-managed notification payloads, activated
   worker updates immediately, and normalized click URLs with unsafe-scheme fallback.
+- Added vendor and marketing-plan HTTP lifecycle tests. Made plan creation and
+  attachment storage share a transaction so upload failure leaves no saved plan
+  or created notification. Permission checks now run before route model binding.
 - Added `ModulePermissionDefinitionsSeeder` so a fresh installation defines
   route-required module permissions before the existing Super admin role setup.
 - Added `ModuleReadinessPermissionSeeder` for expense/purchase status changes and
@@ -94,12 +104,16 @@ not browser rendering, and only makes login/logout writes.
 
 1. Exercise create/edit/delete, attachment lifecycle, exports, filters and calendar
    interactions in a real browser with admin and representative restricted roles.
-2. Verify the deployed scheduler and unrelated queued jobs. Local foreground and
-   background Firebase receipt is accepted; repeat it against deployment settings.
-3. Validate representative original records and migrate/retire old public file
-   URLs after reviewing dependent applications and backups.
-4. Resolve or explicitly accept remaining source layout/PDF differences and
+2. Verify local scheduled workflows as part of feature acceptance. Local foreground
+   and background Firebase receipt is already accepted. Unrelated domains' jobs
+   and production infrastructure are outside this code migration's acceptance.
+3. Resolve or explicitly accept remaining source layout/PDF differences and
    upload reconciliation behavior after outer rollback/process failure.
+
+Browser acceptance still needs actual form interactions for ticket requester lookup,
+closure/reopening, asset accessory replacement, purchase/expense state transitions,
+script/complaint attachments and department visibility, calendar filters, reports,
+and saved-table preview/restore. Structural route checks do not cover these flows.
 
 Only update this decision after recording evidence for the missing checks.
 

@@ -33,6 +33,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->priority([
             SsoTokenAuthenticate::class,
             Authenticate::class,
+            CheckPermission::class,
+            CheckAnyPermission::class,
+            Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
         $middleware->redirectGuestsTo(function (Request $request) {

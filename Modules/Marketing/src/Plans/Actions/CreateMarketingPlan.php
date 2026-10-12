@@ -3,6 +3,7 @@
 namespace Modules\Marketing\Plans\Actions;
 
 use App\Models\MarketingPlan;
+use Illuminate\Support\Facades\DB;
 
 class CreateMarketingPlan
 {
@@ -12,11 +13,12 @@ class CreateMarketingPlan
 
     public function handle(array $data, mixed $files = null): MarketingPlan
     {
-        $plan = MarketingPlan::create($data);
+        return DB::transaction(function () use ($data, $files) {
+            $plan = MarketingPlan::create($data);
+            $this->attachments->handle($plan, $files);
 
-        $this->attachments->handle($plan, $files);
-
-        return $plan;
+            return $plan;
+        });
     }
 }
 
