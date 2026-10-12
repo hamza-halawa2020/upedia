@@ -2,7 +2,37 @@
 
 ## Goal
 
-Move the active Upedia Laravel applications into `setting.upedia` as one modular Laravel 11 project, while keeping the current apps running until each module is fully migrated and verified.
+Move the active Upedia Laravel applications into `D:/hamza/upedia-all` as one modular Laravel 11 project, while keeping the current apps running until each module is fully migrated and verified.
+
+## IT Migration Progress
+
+- Solution administration is registered under `/it/it-solutions`: create, edit,
+  list, detail, department visibility and deletion of attachment-free solutions.
+- Each administration operation requires its `it_solutions_*` permission.
+- Existing attachments are preserved on edits. Upload/download/file deletion
+  migration remains pending; deleting an attached solution is temporarily blocked.
+- Ticket configuration is migrated with explicit resources and independent controllers.
+
+- Active project root: `D:/hamza/upedia-all`; application classes live in `app/`.
+- IT Products migrated into `Modules/IT/src/Products` with `/it/products`
+  URLs and `it.products.*` route names.
+- Reuse shared `ItProduct`, `Asset`, and `AssetAccessory` models and UI components.
+- Notification delivery uses shared `Modules/Notifications/src/Actions/NotifyActor.php`.
+- Focused FormRequests, Actions, Queries, and Filters; files below 200 lines.
+- Dependent deletion is transactional and bulk-based to avoid N+1 queries.
+- Vendors CRUD, search, pagination, Excel/CSV export, permissions, and actor
+  notifications migrated. Dependent asset deletion is transactional and bulk-based.
+- Vendor PDF export and saved filtered tables remain pending shared export infrastructure.
+- Excel's declared dependency is now installed and locked; Symfony String remains
+  on its original version. Composer audit reports four existing Laravel framework
+  advisories; plan a separate supported-framework upgrade before production rollout.
+- Isolated tests use `http://localhost`; development `APP_URL` must include its scheme.
+- Verified in the new project: 16 isolated IT tests, 102 assertions, registered
+  product/vendor routes, compiled Blade templates, PHP syntax and 200-line checks.
+- Full browser interaction checks remain pending.
+- Next: ticket configuration, Tickets, Assets, Purchases/Expenses,
+  Solutions, saved filters, dashboards/reports, notification configuration.
+- Original applications remain unchanged. Products and the above Vendors scope are migrated.
 
 The target architecture is a modular monolith:
 
@@ -158,7 +188,7 @@ Start with the smallest and lowest-risk systems, then move to the bigger operati
 8. `retention.upedia`
 9. `upedia-student`
 
-`setting.upedia` remains the host/core app.
+`D:/hamza/upedia-all` is the host/core app; `setting.upedia` is the old source.
 
 ## Rules During Migration
 
@@ -168,7 +198,7 @@ These rules are mandatory. No migration task is considered done unless it follow
 2. Do not delete or modify the original projects during migration.
 3. Do not duplicate core models unless a module has real module-specific behavior.
 4. Do not duplicate business logic, queries, validation, Blade components, helpers, or services. Reuse or extract shared code first.
-5. Migrations and shared seeders live only in `setting.upedia`.
+5. Migrations and shared seeders live only in `D:/hamza/upedia-all`.
 6. Root modules are organized by domain/business area.
 7. Features inside a domain are organized in separate folders.
 8. Do not create a root module for every small feature if those features belong to the same domain.
@@ -211,9 +241,32 @@ Route names can remain compatible with the old app when needed, but URLs must be
 
 ## Code Size And Maintainability Rules
 
+Marketing reports now live in `Modules/Marketing/src/Reports`:
+
+- `Services/MarketingReportService`: orchestration only (55 lines).
+- `Queries/ReportData`: database reads with eager-loaded staff relationships.
+- `Filters/ReportDateRange`: date parsing and range normalization.
+- `Builders`: Summary, Breakdowns, Trends, Sections, Metrics, Charts, and Links.
+- `Http/Requests/MarketingReportRequest`: validated date inputs.
+- `App/Services/MarketingReportService` remains a thin compatibility adapter,
+  not a second implementation.
+- Every extracted class is below 200 lines. Regression tests cover report shape,
+  calculations, date ordering, defaults and query-free presentation building.
+- A one-time comparison verified the full populated report output matches the
+  original service. Existing query scope and eager loading were preserved.
+- SQL aggregation/streaming for very large reporting datasets remains future work;
+  this refactor does not change the existing in-memory reporting strategy.
+
 The new monolith must be easy to edit and maintain. Large files are not allowed by default.
 
 ## Architecture Pattern
+
+Ticket configuration uses explicit resource routes and independent
+`TicketCategoryController`, `TicketItemController`, and `TicketPriorityController`,
+each with its own FormRequest. Do not generate domain routes through a catalog loop
+or choose validation rules from route defaults. Share only genuinely common
+Actions/Queries and view structure. The internal Catalog enum remains a typed
+selector for those existing shared classes, not an HTTP routing mechanism.
 
 Use a feature-first modular monolith with use-case classes.
 

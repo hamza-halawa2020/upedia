@@ -2,24 +2,19 @@
 
 namespace Modules\Marketing\Reports\Http\Controllers;
 
-use App\Services\MarketingReportService;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Modules\Marketing\Reports\Http\Requests\MarketingReportRequest;
+use Modules\Marketing\Reports\Services\MarketingReportService;
 
-class MarketingReportController extends \Illuminate\Routing\Controller
+class MarketingReportController extends Controller
 {
-    protected $reportService;
-
-    public function __construct(MarketingReportService $reportService)
+    public function __construct(private readonly MarketingReportService $reports)
     {
-        $this->reportService = $reportService;
-        $this->middleware('check.permission:marketing_reports_index')->only(['index']);
-
+        $this->middleware('check.permission:marketing_reports_index')->only('index');
     }
 
-    public function index(Request $request)
+    public function index(MarketingReportRequest $request)
     {
-        $dashboard = $this->reportService->build($request->only(['from', 'to']));
-
-        return view('marketing::reports.index', $dashboard);
+        return view('marketing::reports.index', $this->reports->build($request->validated()));
     }
 }

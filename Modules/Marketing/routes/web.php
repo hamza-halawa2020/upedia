@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Marketing\Complaints\Http\Controllers\ComplaintController;
 use Modules\Marketing\Plans\Http\Controllers\MarketingPlanController;
 use Modules\Marketing\QuickLinks\Http\Controllers\QuickLinkController;
+use Modules\Marketing\Reports\Http\Controllers\MarketingReportController;
 use Modules\Marketing\Scripts\Http\Controllers\ScriptController;
 
 Route::middleware(['sso.token', 'auth'])->prefix('marketing')->group(function () {
@@ -21,4 +22,7 @@ Route::middleware(['sso.token', 'auth'])->prefix('marketing')->group(function ()
     Route::post('/quick-links', [QuickLinkController::class, 'store'])->name('quick_links.store');
     Route::put('/quick-links/{quickLink}', [QuickLinkController::class, 'update'])->name('quick_links.update');
     Route::delete('/quick-links/{quickLink}', [QuickLinkController::class, 'destroy'])->name('quick_links.destroy');
+
+    Route::get('/reports', [MarketingReportController::class, 'index'])->name('reports.index');
+
 });
