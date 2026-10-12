@@ -14,9 +14,14 @@ class BaseNotification extends Notification implements ShouldBroadcastNow
     use Queueable;
 
     public string $message;
+
     public string $title;
+
     public $action_url;
+
     public array $channel;
+
+    public bool $sendPush = true;
 
     public function __construct(string $message, string $title, array $channel, string|array|null $action_url = null)
     {
@@ -61,6 +66,7 @@ class BaseNotification extends Notification implements ShouldBroadcastNow
     protected function getData(object $notifiable): array
     {
         return [
+            'notification_id' => $this->id,
             'message' => $this->message,
             'title' => $this->title,
             'action_url' => $this->action_url ?? route('dashboard'),
@@ -71,7 +77,7 @@ class BaseNotification extends Notification implements ShouldBroadcastNow
     {
         $data = $this->getData($notifiable);
 
-        if (method_exists($notifiable, 'deviceTokens')) {
+        if ($this->sendPush && method_exists($notifiable, 'deviceTokens')) {
             app(FirebaseNotificationService::class)->sendToUser($notifiable, $data);
         }
 
