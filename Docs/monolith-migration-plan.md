@@ -6,6 +6,56 @@ Move the active Upedia Laravel applications into `D:/hamza/upedia-all` as one mo
 
 ## IT Migration Progress
 
+- Ticket resource/export/saved-table and all three staff lookup routes are now
+  registered under `/it/tickets`. Staff API success responses use the shared
+  responder with `data`; endpoints require ticket creation permission.
+- Ticket closure/reopening tracks `closed_at` and `reopen_count` transactionally.
+- Business deadlines skip Friday/Saturday and respect notification configuration
+  working hours. Invalid working-hour windows are rejected rather than looping.
+- Source `sla_hours` is treated as minutes for compatibility; confirm intended
+  units before a separate data/behavior migration. Zero SLA clears old deadlines.
+- Ticket attachments, PDF, scheduled notifications, view tracking, manager detail
+  lookup and TestTicket-specific workflow migration remain pending.
+- Staff-details currently returns name, department and phone, not manager_name.
+- New forms use the unified API envelope; consumers of the old raw staff arrays
+  must read `data`. Full browser interaction verification remains pending.
+
+- Asset resource, Excel/CSV export and saved-table routes now exist under `/it/asset`.
+- Canonical `App/Models/Asset` reuses IT product mapping and now provides
+  department/vendor/accessory relationships plus aggregate total cost.
+- Accessory replacement uses bulk writes inside a transaction. Form submissions
+  explicitly indicate the empty accessory set so removing the last item persists.
+- PDF, asset dashboard, actor notifications and browser verification remain pending.
+
+- Expense resource, Excel/CSV export and saved-table creation are registered
+  under `/it/expenses`. `Modules/IT/Expenses/Models/ItExpense` owns `expenses`;
+  the shared finance `App/Models/Expense` continues to own `sm_add_expenses`.
+- Petty-cash writes and finance expense creation share a transaction. Paid IT
+  expenses cannot be edited/deleted; status is not accepted from ordinary forms.
+- Purchases/Expenses reuse `SavedTables/Actions/SaveExportTable`.
+- Expense approval/status endpoint, PDF export and actor notifications remain
+  pending. Financial posting follows existing source behavior, not a new ledger design.
+
+- Purchases resource is registered under `/it/purchase`, with `/export` and
+  `/save-filtered-table` registered before the resource wildcard.
+- Pending-only create/update workflows calculate item tax and shipping, insert
+  details in bulk and synchronize requester/vendors inside a transaction.
+- Export supports Excel/CSV and saved Excel tables; listing/export share filters.
+- PDF, purchase attachments and approval/status transitions remain pending.
+  Attached, invoiced or non-pending purchases cannot currently be deleted.
+- Source behavior intentionally tightened: clients cannot change status through
+  ordinary edits; item amounts are rounded to two decimal places.
+- Focused purchase tests pass (3 tests, 22 assertions).
+
+- Saved-table index, restore, view/download and destroy routes are registered
+  under `/it/filtered-tables`. Queries enforce `project = it`; file access is
+  restricted to the public disk's `filtered_tables` directory.
+- Restore only targets registered IT routes and permits known filter keys.
+- Excel/CSV saved files currently download instead of rendering an inline preview;
+  saved-table creation and bounded spreadsheet preview remain pending.
+- File removal runs after database commit; filesystem cleanup failures still
+  require operational handling/retry rather than a distributed transaction.
+
 - Solution administration is registered under `/it/it-solutions`: create, edit,
   list, detail, department visibility and deletion of attachment-free solutions.
 - Each administration operation requires its `it_solutions_*` permission.

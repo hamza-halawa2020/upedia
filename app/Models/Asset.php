@@ -40,13 +40,33 @@ class Asset extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-        public function product()
+    public function product()
     {
         return $this->belongsTo(ItProduct::class, 'product_id');
     }
 
-    // public function department()
-    // {
-    //     return $this->belongsTo(Department::class, 'department_id');
-    // }
+    public function department()
+    {
+        return $this->belongsTo(SmHumanDepartment::class, 'department_id');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
+    }
+
+    public function accessories()
+    {
+        return $this->hasMany(AssetAccessory::class, 'asset_id');
+    }
+
+    public function getTotalCostAttribute(): float
+    {
+        $cost = $this->accessories_sum_cost;
+        if ($cost === null && $this->relationLoaded('accessories')) {
+            $cost = $this->accessories->where('enabled', true)->sum('cost');
+        }
+
+        return (float) $this->purchase_cost + (float) ($cost ?? 0);
+    }
 }

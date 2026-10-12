@@ -2,8 +2,10 @@
 
 namespace Modules\IT\Vendors\Http\Controllers;
 
+use App\Models\Vendor;
 use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\IT\SavedTables\Actions\SaveExportTable;
 use Modules\IT\Vendors\Actions\CreateVendor;
 use Modules\IT\Vendors\Actions\DeleteVendor;
 use Modules\IT\Vendors\Actions\UpdateVendor;
@@ -18,7 +20,7 @@ class VendorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('check.permission:it_vendors_index')->only(['index', 'export']);
+        $this->middleware('check.permission:it_vendors_index')->only(['index', 'export', 'saveFilteredTable']);
         $this->middleware('check.permission:it_vendors_create')->only(['create', 'store']);
         $this->middleware('check.permission:it_vendors_show')->only('show');
         $this->middleware('check.permission:it_vendors_edit')->only(['edit', 'update']);
@@ -70,5 +72,14 @@ class VendorController extends Controller
     {
         return Excel::download(new VendorsExport($request->validated()),
             'vendors.'.$request->validated('format', 'xlsx'));
+    }
+
+    public function saveFilteredTable(ListVendorsRequest $request, ListVendors $query, SaveExportTable $save)
+    {
+        $criteria = $request->safe()->except('per_page');
+        $save->handle(new VendorsExport($criteria), 'Vendors', Vendor::class,
+            $criteria, $query->query($criteria)->count());
+
+        return redirect()->route('it.filtered_tables.index')->with('success', 'Vendor table saved.');
     }
 }
