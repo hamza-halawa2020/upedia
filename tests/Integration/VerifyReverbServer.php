@@ -7,8 +7,8 @@ require __DIR__.'/../../vendor/autoload.php';
 $app = require __DIR__.'/../../bootstrap/app.php';
 $app->make(Kernel::class)->bootstrap();
 $options = config('broadcasting.connections.reverb.options');
-if (($options['host'] ?? null) !== '127.0.0.1' || (int) ($options['port'] ?? 0) !== 8080) {
-    throw new RuntimeException('This verifier only publishes to local Reverb on 127.0.0.1:8080.');
+if (! in_array($options['host'] ?? null, ['127.0.0.1', 'upedia-all.test'], true) || (int) ($options['port'] ?? 0) !== 8080) {
+    throw new RuntimeException('This verifier only publishes to local Reverb on the configured local host on port 8080.');
 }
 $app->make(Factory::class)->connection('reverb')->broadcast(
     ['private-upedia-verification'], 'verification.completed', ['synthetic' => true]

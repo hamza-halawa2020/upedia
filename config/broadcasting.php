@@ -14,7 +14,7 @@ return [
                 'scheme' => env('REVERB_SCHEME', 'http'),
                 'useTLS' => env('REVERB_SCHEME', 'http') === 'https',
             ],
-            'client_options' => [],
+            'client_options' => ['verify' => env('REVERB_CA_CERT', true)],
         ],
         'log' => ['driver' => 'log'],
         'null' => ['driver' => 'null'],
