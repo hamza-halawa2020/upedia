@@ -69,18 +69,8 @@ class FirebaseNotificationService
                     'token' => $token,
                     'data' => $this->firebaseData($payload),
                     'webpush' => [
-                        'notification' => [
-                            'title' => $payload['title'] ?? 'Notification',
-                            'body' => $payload['message'] ?? '',
-                            'icon' => '/assets/images/logo-icon.png',
-                            'badge' => '/assets/images/logo-icon.png',
-                            'tag' => $this->notificationTag($payload),
-                            'renotify' => true,
-                            'data' => $this->firebaseData($payload),
-                        ],
-                        'fcm_options' => [
-                            'link' => $payload['action_url'] ?? url('/notifications'),
-                        ],
+                        // The shared service worker is the sole display owner for web push.
+                        'headers' => ['Urgency' => 'high', 'TTL' => '300'],
                     ],
                 ],
             ]);

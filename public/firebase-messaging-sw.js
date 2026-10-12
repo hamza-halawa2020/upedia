@@ -1,3 +1,24 @@
+const notificationUrl = value => {
+    try {
+        const url = new URL(value || '/notifications', self.location.origin);
+        return ['https:', 'http:'].includes(url.protocol) ? url.href : self.location.origin + '/notifications';
+    } catch {
+        return self.location.origin + '/notifications';
+    }
+};
+
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    const actionUrl = notificationUrl(event.notification.data?.action_url);
+    event.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+        const client = clientList.find(item => item.url === actionUrl && 'focus' in item);
+        return client ? client.focus() : clients.openWindow(actionUrl);
+    }));
+});
+
+self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
+self.addEventListener('activate', event => event.waitUntil(clients.claim()));
+
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
 
@@ -14,7 +35,8 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-    console.log('[Firebase SW] background payload received', payload);
+    // FCM already displays notification payloads; only data-only messages need a display here.
+    if (payload.notification) return;
 
     const data = payload.data || {};
     const title =
@@ -28,7 +50,7 @@ messaging.onBackgroundMessage(function (payload) {
         data.message ||
         data.notification_body ||
         '';
-    const actionUrl = data.action_url || '/notifications';
+    const actionUrl = notificationUrl(data.action_url);
     const notificationTag = self.location.origin + '-' + (data.notification_id || Date.now());
 
     const options = {
@@ -43,30 +65,5 @@ messaging.onBackgroundMessage(function (payload) {
         },
     };
 
-    console.log('[Firebase SW] showing background notification', {
-        title: title,
-        body: body,
-        actionUrl: actionUrl,
-        tag: notificationTag,
-    });
-
     return self.registration.showNotification(title, options);
-});
-
-self.addEventListener('notificationclick', function (event) {
-    event.notification.close();
-
-    const actionUrl = event.notification.data?.action_url || '/notifications';
-
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-            for (const client of clientList) {
-                if (client.url === actionUrl && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-
-            return clients.openWindow(actionUrl);
-        })
-    );
 });
