@@ -34,3 +34,13 @@ async function verifyFirebaseWorker(source, evaluate = (code, globals) => {
     assert(focused === 2 && opened.length === 0, 'Unsafe URL must fall back to notifications');
     return { tests: 5, passed: 5 };
 }
+
+if (typeof require === 'function' && require.main === module) {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const source = fs.readFileSync(path.join(__dirname, '../../public/firebase-messaging-sw.js'), 'utf8');
+    verifyFirebaseWorker(source).then(result => console.log(result)).catch(error => {
+        console.error(error.message);
+        process.exitCode = 1;
+    });
+}
