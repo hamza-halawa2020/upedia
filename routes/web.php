@@ -8,6 +8,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttachmentController;
+
+Route::middleware(['sso.token', 'auth'])->group(function () {
+    Route::get('/attachments/{attachment}', [AttachmentController::class, 'show'])->whereNumber('attachment')->name('attachments.show');
+    Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->whereNumber('attachment')->name('attachments.destroy');
+});
 use App\Http\Controllers\Dashboard\UserRolePermissionController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Dashboard\DepartmentController;

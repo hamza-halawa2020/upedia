@@ -12,9 +12,7 @@ class DeleteSolution
     {
         DB::transaction(function () use ($id) {
             $solution = ItSolution::lockForUpdate()->findOrFail($id);
-            if ($solution->attachments()->exists()) {
-                throw ValidationException::withMessages(['solution' => 'Attachment deletion is not migrated yet. This solution cannot be deleted.']);
-            }
+            app(\App\Actions\Attachments\DeleteAttachments::class)->handle($solution);
             $solution->departments()->detach();
             $solution->delete();
         });

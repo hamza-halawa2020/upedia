@@ -121,7 +121,7 @@
                                 <div class="col-md-4 mb-3">
                                     <div class="border rounded p-2 text-center">
                                         @if($isImage)
-                                            <img src="{{ asset($file->file_path) }}" class="img-fluid rounded mb-2"
+                                            <img src="{{ route('attachments.show', $file->id) }}" class="img-fluid rounded mb-2"
                                                 style="max-height: 150px;">
                                         @else
                                             <i class="fas fa-file fa-2x mb-2"></i>
@@ -131,7 +131,7 @@
                                             {{ basename($file->file_path) }}
                                         </div>
 
-                                        <a href="{{ asset($file->file_path) }}" target="_blank"
+                                        <a href="{{ route('attachments.show', $file->id) }}" target="_blank"
                                             class="btn btn-sm btn-outline-primary mt-2">
                                             View
                                         </a>

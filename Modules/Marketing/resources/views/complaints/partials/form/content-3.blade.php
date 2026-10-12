@@ -112,7 +112,7 @@
 
                 <div class="attachment-list">
                     @foreach ($complain->attachments as $file)
-                        <a href="{{ asset($file->file_path) }}" target="_blank" class="attachment-chip">
+                        <a href="{{ route('attachments.show', $file->id) }}" target="_blank" class="attachment-chip">
                             <iconify-icon icon="mdi:paperclip"></iconify-icon>
                             <span>{{ basename($file->file_path) }}</span>
                         </a>

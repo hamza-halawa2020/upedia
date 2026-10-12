@@ -58,7 +58,7 @@
                         <div class="row g-3">
                             @foreach($scr->attachments as $file)
                                 @php
-                                    $path = asset($file->file_path);
+                                    $path = route('attachments.show', $file->id);
                                     $extension = strtolower(pathinfo($file->file_path, PATHINFO_EXTENSION));
                                     $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'jfif']);
                                 @endphp

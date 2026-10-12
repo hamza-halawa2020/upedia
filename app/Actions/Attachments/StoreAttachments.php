@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class StoreAttachments
 {
@@ -22,19 +23,17 @@ class StoreAttachments
                     }
                     $mime = $file->getMimeType();
                     $name = Str::uuid().'.'.$file->guessExtension();
-                    $path = 'uploads/'.$directory.'/'.$name;
-                    $target = public_path('uploads/'.$directory);
-                    if (!is_dir($target) && !mkdir($target, 0755, true) && !is_dir($target)) {
-                        throw new \RuntimeException('Could not create attachment directory.');
+                    $path = 'private-attachments/'.$directory.'/'.$name;
+                    if (!Storage::disk('local')->putFileAs('private-attachments/'.$directory, $file, $name)) {
+                        throw new \RuntimeException('Could not store attachment.');
                     }
-                    $file->move($target, $name);
-                    $written[] = public_path($path);
+                    $written[] = $path;
                     $owner->attachments()->create(['file_path' => $path,
                         'original_name' => basename($file->getClientOriginalName()), 'file_type' => $mime]);
                 }
             });
         } catch (\Throwable $exception) {
-            foreach ($written as $path) { if (is_file($path)) { unlink($path); } }
+            foreach ($written as $path) { Storage::disk('local')->delete($path); }
             throw $exception;
         }
     }

@@ -96,11 +96,11 @@
                                     <div class="attachment-item">
                                         <div class="attachment-preview">
                                             @if ($isImage)
-                                                <a href="{{ asset($file->file_path) }}" target="_blank">
-                                                    <img src="{{ asset($file->file_path) }}" alt="Attachment">
+                                                <a href="{{ route('attachments.show', $file->id) }}" target="_blank">
+                                                    <img src="{{ route('attachments.show', $file->id) }}" alt="Attachment">
                                                 </a>
                                             @elseif ($isPdf)
-                                                <iframe src="{{ asset($file->file_path) }}" frameborder="0"></iframe>
+                                                <iframe src="{{ route('attachments.show', $file->id) }}" frameborder="0"></iframe>
                                             @else
                                                 <div class="file-icon">
                                                     <iconify-icon icon="mdi:paperclip"></iconify-icon>
@@ -113,7 +113,7 @@
                                                 {{ basename($file->file_path) }}
                                             </div>
 
-                                            <a href="{{ asset($file->file_path) }}" target="_blank" class="asset-btn asset-btn--secondary attachment-view-btn">
+                                            <a href="{{ route('attachments.show', $file->id) }}" target="_blank" class="asset-btn asset-btn--secondary attachment-view-btn">
                                                 <iconify-icon icon="lucide:eye"></iconify-icon>
                                                 <span>View</span>
                                             </a>

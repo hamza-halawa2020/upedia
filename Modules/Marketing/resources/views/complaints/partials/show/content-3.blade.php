@@ -51,10 +51,10 @@
                                         $isPdf = $extension === 'pdf';
                                     @endphp
 
-                                    <a href="{{ asset($file->file_path) }}" target="_blank" class="attachment-item">
+                                    <a href="{{ route('attachments.show', $file->id) }}" target="_blank" class="attachment-item">
                                         <div class="attachment-preview">
                                             @if ($isImage)
-                                                <img src="{{ asset($file->file_path) }}" alt="Attachment">
+                                                <img src="{{ route('attachments.show', $file->id) }}" alt="Attachment">
                                             @elseif ($isPdf)
                                                 <div class="file-icon file-icon--pdf">
                                                     <iconify-icon icon="mdi:file-pdf-box"></iconify-icon>

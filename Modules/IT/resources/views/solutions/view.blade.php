@@ -7,4 +7,7 @@
     <p>{{ $solution->keywords }}</p>
     <a href="{{ route('it.solutions.browse') }}">Back</a>
 </div></div>
+    @foreach($solution->attachments as $file)
+        <a href="{{ route('attachments.show', $file->id) }}">{{ $file->original_name ?: basename($file->file_path) }}</a>
+    @endforeach
 @endsection

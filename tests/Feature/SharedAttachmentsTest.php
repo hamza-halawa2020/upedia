@@ -11,6 +11,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class SharedAttachmentsTest extends TestCase
@@ -19,6 +21,7 @@ class SharedAttachmentsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Storage::fake('local');
         $this->assertSame(':memory:', config('database.connections.sqlite.database'));
         $this->directory = storage_path('framework/testing/attachment-'.uniqid());
         $this->app->usePublicPath($this->directory);
@@ -42,7 +45,7 @@ class SharedAttachmentsTest extends TestCase
         $this->assertNotSame($attachments[0]->file_path, $attachments[1]->file_path);
         foreach ($attachments as $attachment) {
             $this->assertSame('same.png', $attachment->original_name);
-            $this->assertFileExists(public_path($attachment->file_path));
+            Storage::disk('local')->assertExists($attachment->file_path);
         }
     }
     public function test_database_failure_cleans_files_and_rolls_back_owner(): void
@@ -55,7 +58,7 @@ class SharedAttachmentsTest extends TestCase
         } catch (QueryException) {
             $this->assertDatabaseCount('tickets', 0);
             $this->assertDatabaseCount('hr_attachments', 0);
-            $this->assertCount(0, File::files(public_path('uploads/tickets')));
+            $this->assertCount(0, Storage::disk('local')->allFiles('private-attachments/tickets'));
         }
     }
 
@@ -79,5 +82,41 @@ class SharedAttachmentsTest extends TestCase
         $data['attachments'] = [UploadedFile::fake()->image('two.png')];
         $save->handle($data, $solution->id);
         $this->assertCount(2, $solution->attachments()->get());
+    }
+
+    public function test_download_and_delete_require_owner_permissions(): void
+    {
+        $ticket = Ticket::create(['title' => 'Issue']);
+        app(StoreAttachments::class)->handle($ticket, [UploadedFile::fake()->image('safe.png')], 'tickets');
+        $file = $ticket->attachments()->sole();
+        $user = $this->actingAsAdminWithPermissions();
+        $show = Permission::create(['name' => 'it_tickets_show', 'guard_name' => 'web']);
+        $edit = Permission::create(['name' => 'it_tickets_edit', 'guard_name' => 'web']);
+        $this->actingAs($user)->get('/attachments/'.$file->id)->assertForbidden();
+        $user->givePermissionTo($show);
+        $this->get('/attachments/'.$file->id)->assertOk()->assertHeader('Cache-Control', 'no-store, private');
+        $this->delete('/attachments/'.$file->id)->assertForbidden();
+        $user->givePermissionTo($edit);
+        $this->delete('/attachments/'.$file->id)->assertRedirect();
+        Storage::disk('local')->assertMissing($file->file_path);
+        $this->assertDatabaseCount('hr_attachments', 0);
+    }
+
+    public function test_delete_rollback_preserves_file_and_path_traversal_is_rejected(): void
+    {
+        $ticket = Ticket::create(['title' => 'Issue']);
+        app(StoreAttachments::class)->handle($ticket, [UploadedFile::fake()->image('safe.png')], 'tickets');
+        $file = $ticket->attachments()->sole();
+        try {
+            DB::transaction(function () use ($ticket) {
+                app(\App\Actions\Attachments\DeleteAttachments::class)->handle($ticket);
+                throw new \RuntimeException('Rollback');
+            });
+        } catch (\RuntimeException) {
+            $this->assertDatabaseCount('hr_attachments', 1);
+            Storage::disk('local')->assertExists($file->file_path);
+        }
+        $file->file_path = 'uploads/tickets/../../secret.txt';
+        $this->assertNull(app(\App\Actions\Attachments\AttachmentPath::class)->handle($file));
     }
 }

@@ -12,9 +12,7 @@ class DeleteTicket
     {
         DB::transaction(function () use ($id) {
             $ticket = Ticket::lockForUpdate()->findOrFail($id);
-            if ($ticket->attachments()->exists()) {
-                throw ValidationException::withMessages(['ticket' => 'Attachment deletion is not migrated yet.']);
-            }
+            app(\App\Actions\Attachments\DeleteAttachments::class)->handle($ticket);
             $ticket->delete();
         });
     }

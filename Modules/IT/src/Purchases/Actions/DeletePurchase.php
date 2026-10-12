@@ -12,10 +12,11 @@ class DeletePurchase
     {
         DB::transaction(function () use ($id) {
             $purchase = Purchase::where('invoice_type', 'purchase')->lockForUpdate()->findOrFail($id);
-            if ($purchase->status !== 'pending' || $purchase->attachments()->exists()
+            if ($purchase->status !== 'pending'
                 || $purchase->purchaseInvoices()->exists()) {
                 throw ValidationException::withMessages(['purchase' => 'Only pending, unattached and uninvoiced purchases can be deleted.']);
             }
+            app(\App\Actions\Attachments\DeleteAttachments::class)->handle($purchase);
             $purchase->details()->delete();
             $purchase->requestedStaffs()->detach();
             $purchase->vendors()->detach();

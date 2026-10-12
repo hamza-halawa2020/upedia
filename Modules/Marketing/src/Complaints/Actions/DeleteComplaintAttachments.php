@@ -3,21 +3,13 @@
 namespace Modules\Marketing\Complaints\Actions;
 
 use App\Models\Complain;
+use App\Actions\Attachments\DeleteAttachments;
 
 class DeleteComplaintAttachments
 {
+    public function __construct(private readonly DeleteAttachments $attachments) {}
     public function handle(Complain $complain): void
     {
-        $complain->loadMissing('attachments');
-
-        foreach ($complain->attachments as $attachment) {
-            $filePath = public_path($attachment->file_path);
-
-            if (is_file($filePath)) {
-                unlink($filePath);
-            }
-
-            $attachment->delete();
-        }
+        $this->attachments->handle($complain);
     }
 }

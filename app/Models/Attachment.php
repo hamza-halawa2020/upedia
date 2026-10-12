@@ -16,6 +16,6 @@ class Attachment extends Model
     ];
     public function attachable()
     {
-        return $this->morphTo();
+        return $this->morphTo('attachable', 'model_type', 'model_id');
     }
 }

@@ -18,4 +18,7 @@
             <a href="{{ route('it.tickets.index') }}">Back</a>
         </div>
     </div>
+    @foreach($ticket->attachments as $file)
+        <a href="{{ route('attachments.show', $file->id) }}">{{ $file->original_name ?: basename($file->file_path) }}</a>
+    @endforeach
 @endsection

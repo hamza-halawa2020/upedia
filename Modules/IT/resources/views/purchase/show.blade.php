@@ -9,4 +9,7 @@
     </tbody></table></div>
     <a href="{{ route('it.purchase.index') }}">Back</a>
 </div></div>
+    @foreach($purchase->attachments as $file)
+        <a href="{{ route('attachments.show', $file->id) }}">{{ $file->original_name ?: basename($file->file_path) }}</a>
+    @endforeach
 @endsection

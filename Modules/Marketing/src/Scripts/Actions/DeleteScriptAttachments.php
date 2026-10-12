@@ -3,20 +3,13 @@
 namespace Modules\Marketing\Scripts\Actions;
 
 use App\Models\Script;
+use App\Actions\Attachments\DeleteAttachments;
 
 class DeleteScriptAttachments
 {
+    public function __construct(private readonly DeleteAttachments $attachments) {}
     public function handle(Script $script): void
     {
-        foreach ($script->attachments as $attachment) {
-            $filePath = public_path($attachment->file_path);
-
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
-
-            $attachment->delete();
-        }
+        $this->attachments->handle($script);
     }
 }
-
