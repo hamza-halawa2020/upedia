@@ -8,6 +8,6 @@ class ExportVendorsRequest extends ListVendorsRequest
 {
     public function rules(): array
     {
-        return parent::rules() + ['format' => ['sometimes', Rule::in(['xlsx', 'csv'])]];
+        return parent::rules() + ['format' => ['sometimes', Rule::in(['xlsx', 'csv', 'pdf'])]];
     }
 }

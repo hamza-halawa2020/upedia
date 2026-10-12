@@ -22,6 +22,8 @@
                     href="{{ route('it.vendors.export', ['search' => request('search'), 'format' => 'csv']) }}">
                     <iconify-icon icon="lucide:download"></iconify-icon> CSV
                 </a>
+                <button type="submit" class="btn btn-outline-success" formaction="{{ route('it.vendors.export') }}"
+                    name="format" value="pdf">PDF</button>
             </x-table-controls>
             <div class="ui-table-wrap nice-scrollbar">
                 <table class="ui-table">

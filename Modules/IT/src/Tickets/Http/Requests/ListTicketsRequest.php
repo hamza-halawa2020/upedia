@@ -21,6 +21,6 @@ class ListTicketsRequest extends FormRequest
             'ticket_priority_id' => ['nullable', 'integer', 'exists:ticket_priorities,id'],
             'start_date' => ['nullable', 'date_format:Y-m-d'], 'end_date' => ['nullable', 'date_format:Y-m-d'],
             'per_page' => ['sometimes', 'integer', Rule::in([5, 10, 25, 50, 100, 150])],
-            'format' => ['nullable', Rule::in(['xlsx', 'csv'])]];
+            'format' => ['nullable', Rule::in(['xlsx', 'csv', 'pdf'])]];
     }
 }

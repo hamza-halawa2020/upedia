@@ -2,8 +2,8 @@
 
 namespace Modules\IT\Expenses\Http\Controllers;
 
+use App\Actions\Exports\DownloadExport;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\IT\Expenses\Actions\DeleteExpense;
 use Modules\IT\Expenses\Actions\PayExpense;
 use Modules\IT\Expenses\Actions\SaveExpense;
@@ -73,7 +73,7 @@ class ExpensesController extends Controller
 
     public function export(ListExpensesRequest $request)
     {
-        return Excel::download(new ExpensesExport($request->validated()), 'expenses.'.$request->validated('format', 'xlsx'));
+        return app(DownloadExport::class)->handle(new ExpensesExport($request->validated()), 'expenses', $request->validated('format', 'xlsx'));
     }
 
     public function saveFilteredTable(ListExpensesRequest $request, Expenses $query, SaveExportTable $save)

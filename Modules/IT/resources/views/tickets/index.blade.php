@@ -12,6 +12,8 @@
                     value="csv">CSV</button>
                 <button class="btn btn-outline-primary" formaction="{{ route('it.tickets.saveFilteredTable') }}"
                     title="Save table"><iconify-icon icon="lucide:save"></iconify-icon></button>
+                <button type="submit" class="btn btn-outline-success" formaction="{{ route('it.tickets.export') }}"
+                    name="format" value="pdf">PDF</button>
             </x-table-controls>
             @if($errors->any())
                 <ul>@foreach($errors->all() as $error)

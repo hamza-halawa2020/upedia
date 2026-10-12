@@ -2,8 +2,8 @@
 
 namespace Modules\IT\Purchases\Http\Controllers;
 
+use App\Actions\Exports\DownloadExport;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\IT\Purchases\Actions\ChangePurchaseStatus;
 use Modules\IT\Purchases\Actions\DeletePurchase;
 use Modules\IT\Purchases\Actions\SavePurchase;
@@ -72,7 +72,7 @@ class PurchaseController extends Controller
 
     public function export(ListPurchasesRequest $request)
     {
-        return Excel::download(new PurchasesExport($request->validated()), 'purchases.'.$request->validated('format', 'xlsx'));
+        return app(DownloadExport::class)->handle(new PurchasesExport($request->validated()), 'purchases', $request->validated('format', 'xlsx'));
     }
 
     public function saveFilteredTable(ListPurchasesRequest $request, SavePurchaseTable $save)

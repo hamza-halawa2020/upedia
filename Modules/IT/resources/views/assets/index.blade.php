@@ -12,6 +12,8 @@
                     value="csv">CSV</button>
                 <button class="btn btn-outline-primary" formaction="{{ route('it.asset.saveFilteredTable') }}"
                     title="Save table"><iconify-icon icon="lucide:save"></iconify-icon></button>
+                <button type="submit" class="btn btn-outline-success" formaction="{{ route('it.asset.export') }}"
+                    name="format" value="pdf">PDF</button>
             </x-table-controls>
             <div class="ui-table-wrap">
                 <table class="ui-table">

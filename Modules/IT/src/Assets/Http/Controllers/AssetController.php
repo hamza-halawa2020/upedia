@@ -2,9 +2,9 @@
 
 namespace Modules\IT\Assets\Http\Controllers;
 
+use App\Actions\Exports\DownloadExport;
 use App\Models\Asset;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\IT\Assets\Actions\DeleteAsset;
 use Modules\IT\Assets\Actions\SaveAsset;
 use Modules\IT\Assets\Exports\AssetsExport;
@@ -67,7 +67,7 @@ class AssetController extends Controller
 
     public function export(ListAssetsRequest $request)
     {
-        return Excel::download(new AssetsExport($request->validated()), 'assets.'.$request->validated('format', 'xlsx'));
+        return app(DownloadExport::class)->handle(new AssetsExport($request->validated()), 'assets', $request->validated('format', 'xlsx'));
     }
 
     public function saveFilteredTable(ListAssetsRequest $request, Assets $query, SaveExportTable $save)

@@ -2,9 +2,9 @@
 
 namespace Modules\IT\Vendors\Http\Controllers;
 
+use App\Actions\Exports\DownloadExport;
 use App\Models\Vendor;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\IT\SavedTables\Actions\SaveExportTable;
 use Modules\IT\Vendors\Actions\CreateVendor;
 use Modules\IT\Vendors\Actions\DeleteVendor;
@@ -70,8 +70,7 @@ class VendorController extends Controller
 
     public function export(ExportVendorsRequest $request)
     {
-        return Excel::download(new VendorsExport($request->validated()),
-            'vendors.'.$request->validated('format', 'xlsx'));
+        return app(DownloadExport::class)->handle(new VendorsExport($request->validated()), 'vendors', $request->validated('format', 'xlsx'));
     }
 
     public function saveFilteredTable(ListVendorsRequest $request, ListVendors $query, SaveExportTable $save)

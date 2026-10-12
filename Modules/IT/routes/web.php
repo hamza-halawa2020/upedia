@@ -1,20 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\IT\Assets\Http\Controllers\AssetController;
+use Modules\IT\Dashboard\Http\Controllers\DashboardController;
+use Modules\IT\Expenses\Http\Controllers\ExpensesController;
 use Modules\IT\Products\Http\Controllers\ProductController;
-use Modules\IT\Vendors\Http\Controllers\VendorController;
+use Modules\IT\Purchases\Http\Controllers\PurchaseController;
+use Modules\IT\Reports\Http\Controllers\ReportController;
+use Modules\IT\SavedTables\Http\Controllers\SavedTableController;
+use Modules\IT\Solutions\Http\Controllers\BrowseSolutionsController;
+use Modules\IT\Solutions\Http\Controllers\SolutionController;
 use Modules\IT\TicketConfiguration\Http\Controllers\TicketCategoryController;
 use Modules\IT\TicketConfiguration\Http\Controllers\TicketItemController;
 use Modules\IT\TicketConfiguration\Http\Controllers\TicketPriorityController;
-use Modules\IT\Solutions\Http\Controllers\BrowseSolutionsController;
-use Modules\IT\Solutions\Http\Controllers\SolutionController;
-use Modules\IT\SavedTables\Http\Controllers\SavedTableController;
-use Modules\IT\Purchases\Http\Controllers\PurchaseController;
-use Modules\IT\Expenses\Http\Controllers\ExpensesController;
-use Modules\IT\Assets\Http\Controllers\AssetController;
 use Modules\IT\Tickets\Http\Controllers\TicketController;
-use Modules\IT\Dashboard\Http\Controllers\DashboardController;
-use Modules\IT\Reports\Http\Controllers\ReportController;
+use Modules\IT\Vendors\Http\Controllers\VendorController;
 
 Route::prefix('it')->name('it.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
@@ -26,6 +26,7 @@ Route::prefix('it')->name('it.')->group(function () {
     Route::get('filtered-tables/{filteredTable}/restore', [SavedTableController::class, 'restore'])->whereNumber('filteredTable')->name('filtered_tables.restore');
     Route::delete('filtered-tables/{filteredTable}', [SavedTableController::class, 'destroy'])->whereNumber('filteredTable')->name('filtered_tables.destroy');
     Route::get('filtered-tables/{filteredTable}/view', [SavedTableController::class, 'view'])->whereNumber('filteredTable')->name('filtered_tables.view');
+    Route::get('filtered-tables/{filteredTable}/download', [SavedTableController::class, 'download'])->whereNumber('filteredTable')->name('filtered_tables.download');
 
     // Purchases.
     Route::post('updateStatus/purchase', [PurchaseController::class, 'updateStatus'])->name('purchase.updateStatus');

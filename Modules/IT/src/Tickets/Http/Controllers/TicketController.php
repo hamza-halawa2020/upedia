@@ -2,10 +2,10 @@
 
 namespace Modules\IT\Tickets\Http\Controllers;
 
+use App\Actions\Exports\DownloadExport;
 use App\Models\Ticket;
 use App\Support\Api\ApiResponse;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\IT\SavedTables\Actions\SaveExportTable;
 use Modules\IT\Tickets\Actions\DeleteTicket;
 use Modules\IT\Tickets\Actions\SaveTicket;
@@ -84,7 +84,7 @@ class TicketController extends Controller
 
     public function export(ListTicketsRequest $request)
     {
-        return Excel::download(new TicketsExport($request->validated()), 'tickets.'.$request->validated('format', 'xlsx'));
+        return app(DownloadExport::class)->handle(new TicketsExport($request->validated()), 'tickets', $request->validated('format', 'xlsx'));
     }
 
     public function saveFilteredTable(ListTicketsRequest $request, Tickets $query, SaveExportTable $save)
