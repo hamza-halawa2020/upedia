@@ -28,10 +28,11 @@ class TicketStaff
 
     public function details(int $id): array
     {
-        $staff = Staff::with('department:id,name')->findOrFail($id);
+        $staff = Staff::with(['department:id,name', 'manager:id,first_name,last_name,full_name'])->findOrFail($id);
 
         return ['id' => $staff->id, 'full_name' => $staff->full_name ?: trim($staff->first_name.' '.$staff->last_name),
             'department_name' => $staff->department?->name,
-            'phone' => trim(($staff->mobile_dial_code ?? '').' '.($staff->mobile ?? $staff->home_phone ?? ''))];
+            'manager_name' => $staff->manager ? ($staff->manager->full_name ?: trim($staff->manager->first_name.' '.$staff->manager->last_name)) : null,
+            'phone' => $staff->mobile ? trim(($staff->mobile_dial_code ?? '').' '.$staff->mobile) : ($staff->home_phone ?: null)];
     }
 }

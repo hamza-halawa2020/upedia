@@ -15,6 +15,7 @@
                     <dd>{{ $overdueCount }}</dd>
                 </div>
             </dl>
+            @include('it::dashboard.partials.workload')
             <h2 class="fs-5">Active Priorities</h2>
             <table class="ui-table">
                 <thead>

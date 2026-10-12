@@ -2,15 +2,15 @@
 
 namespace Modules\Marketing\Scripts\Exports;
 
+use App\Support\Exports\SafeValueBinder;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ScriptsExport implements FromCollection, WithHeadings
+class ScriptsExport extends SafeValueBinder implements FromCollection, WithCustomValueBinder, WithHeadings
 {
-    public function __construct(private readonly Collection $scripts)
-    {
-    }
+    public function __construct(private readonly Collection $scripts) {}
 
     public function collection(): Collection
     {
@@ -29,4 +29,3 @@ class ScriptsExport implements FromCollection, WithHeadings
         return ['Title', 'Category Name', 'Visibility', 'Status', 'Departments', 'Created At'];
     }
 }
-

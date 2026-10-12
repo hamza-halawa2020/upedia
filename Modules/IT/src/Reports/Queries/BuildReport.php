@@ -2,6 +2,7 @@
 
 namespace Modules\IT\Reports\Queries;
 
+use Modules\IT\Reports\Builders\ReportLinks;
 use Modules\IT\Reports\Filters\ReportWindow;
 
 class BuildReport
@@ -15,10 +16,13 @@ class BuildReport
         [$start, $end, $range] = $this->window->resolveFilterWindow($criteria['range'] ?? 'month',
             $criteria['date_from'] ?? null, $criteria['date_to'] ?? null);
 
-        return ['start' => $start, 'end' => $end, 'range' => $range,
+        $departmentPerformance = $this->classification->getDepartmentPerformance($start, $end);
+
+        return ['links' => app(ReportLinks::class)->handle($start, $end, $departmentPerformance->first()?->id),
+            'topDepartment' => $departmentPerformance->first(), 'start' => $start, 'end' => $end, 'range' => $range,
             'totalStats' => $this->totals->getTotals($start, $end),
             'classification' => $this->classification->getClassification($start, $end),
-            'departmentPerformance' => $this->classification->getDepartmentPerformance($start, $end),
+            'departmentPerformance' => $departmentPerformance,
             'resolutionMetrics' => $this->resolution->getResolutionMetrics($start, $end),
             'resolutionDescriptions' => $this->resolution->getResolutionDescriptions($start, $end),
             'recurringIssues' => $this->classification->getRecurringIssues($start, $end),

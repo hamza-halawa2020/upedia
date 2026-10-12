@@ -21,6 +21,13 @@
                 <li>{{ $error }}</li>@endforeach
             </ul>@endif
             <p>{{ $start->format('Y-m-d') }} to {{ $end->format('Y-m-d') }}</p>
+            @can('it_tickets_index')
+                <nav class="d-flex gap-3 flex-wrap" aria-label="Report details">
+                    @foreach($links as $label => $url)<a href="{{ $url }}">{{ $label }}</a>@endforeach
+                </nav>
+            @endcan
+            @if($topDepartment)
+            <p>Top Department: {{ $topDepartment->name }}</p>@endif
             <h2 class="fs-5">Ticket Summary</h2>
             <dl class="d-flex gap-4 flex-wrap">@foreach($totalStats as $key => $value)
                 <div>
@@ -60,10 +67,12 @@
             @include('it::reports.partials.table', ['title' => 'Hours', 'rows' => $timePatterns['hours'], 'columns' => ['label' => 'Hour', 'total' => 'Tickets']])
             <h2 class="fs-5">Internet / Network Issues</h2>
             <p>Total: {{ $internetPattern['total'] }}. Peak Day: {{ $internetPattern['peak_day'] }}. Peak Hour:
-                {{ $internetPattern['peak_hour'] }}.</p>
+                {{ $internetPattern['peak_hour'] }}.
+            </p>
             @include('it::reports.partials.table', ['title' => 'Reopened Tickets', 'rows' => $reopenedIssues, 'columns' => ['title' => 'Ticket', 'reopen_count' => 'Reopened', 'status' => 'Status']])
             @include('it::reports.partials.table', ['title' => 'Resolution Notes', 'rows' => $resolutionDescriptions, 'columns' => ['title' => 'Ticket', 'resolution_description' => 'Resolution']])
             @foreach($charts as $name => $chart)
+                <x-report-chart :chart="$chart" :title="ucfirst($name) . ' Trend'" :id="'it-report-' . $name" />
                 @include('it::reports.partials.table', [
                     'title' => ucfirst($name) . ' Trend',
                     'rows' => collect($chart['labels'])->map(fn($label, $index) => ['label' => $label, 'total' => $chart['values'][$index]]),

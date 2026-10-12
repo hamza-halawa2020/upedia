@@ -5,6 +5,7 @@ namespace Modules\IT\Dashboard\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Modules\IT\Dashboard\Queries\AssetOverview;
 use Modules\IT\Dashboard\Queries\TicketOverview;
+use Modules\IT\Dashboard\Queries\TicketWorkload;
 
 class DashboardController extends Controller
 {
@@ -19,9 +20,11 @@ class DashboardController extends Controller
         return view('it::dashboard.index');
     }
 
-    public function requestsDashboard(TicketOverview $tickets)
+    public function requestsDashboard(TicketOverview $tickets, TicketWorkload $workload, AssetOverview $assets)
     {
-        return view('it::dashboard.statistics', $tickets->handle());
+        return view('it::dashboard.statistics', $tickets->handle() + $workload->handle() + [
+            'assetSummary' => auth()->user()->checkPermissionTo('it_assets_index') ? $assets->handle()['summary'] : null,
+        ]);
     }
 
     public function assetDashboard(AssetOverview $assets)

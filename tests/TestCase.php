@@ -52,6 +52,7 @@ abstract class TestCase extends BaseTestCase
         }); 
         
          Schema::create('sm_staffs', function (Blueprint $table) {
+            $table->boolean('active_status')->default(true);
             $table->id();
             $table->string('full_name');
             $table->string('first_name');

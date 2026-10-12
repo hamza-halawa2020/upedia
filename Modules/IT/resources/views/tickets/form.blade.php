@@ -7,7 +7,7 @@
                 <ul>@foreach($errors->all() as $error)
                 <li>{{ $error }}</li>@endforeach
             </ul>@endif
-            <form method="POST"
+            <form method="POST" enctype="multipart/form-data"
                 action="{{ $ticket ? route('it.tickets.update', $ticket->id) : route('it.tickets.store') }}">
                 @csrf @if($ticket) @method('PUT') @endif
                 <label for="title" class="form-label">Title</label><input class="form-control mb-3" id="title" name="title"
@@ -30,19 +30,22 @@
                         </option>@endforeach
                     </select>
                 @endforeach
+                @include('it::tickets.partials.requester-details')
                 @foreach(['status' => ['open', 'pending', 'in_progress', 'closed'], 'request_type' => ['issue', 'request', 'inquiry']] as $field => $options)
                     <label for="{{ $field }}" class="form-label">{{ ucwords(str_replace('_', ' ', $field)) }}</label>
                     <select id="{{ $field }}" name="{{ $field }}" class="form-select mb-3">
                         @foreach($options as $value)
                             <option value="{{ $value }}" @selected(old($field, $ticket?->{$field}) === $value)>
-                        {{ ucwords(str_replace('_', ' ', $value)) }}</option>@endforeach
+                                {{ ucwords(str_replace('_', ' ', $value)) }}
+                        </option>@endforeach
                     </select>
                 @endforeach
                 <button type="submit" class="btn btn-primary"><iconify-icon icon="lucide:save"></iconify-icon> Save</button>
                 <a href="{{ route('it.tickets.index') }}" class="btn btn-outline-secondary">Cancel</a>
                 <label class="form-label" for="attachments">Attachments</label>
-        <input id="attachments" type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png" class="form-control mb-3">
-    </form>
+                <input id="attachments" type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png"
+                    class="form-control mb-3">
+            </form>
         </div>
     </div>
     <script>

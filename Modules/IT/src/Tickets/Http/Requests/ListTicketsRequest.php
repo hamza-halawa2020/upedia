@@ -15,6 +15,8 @@ class ListTicketsRequest extends FormRequest
     public function rules(): array
     {
         return ['search' => ['nullable', 'string', 'max:255'], 'q' => ['nullable', 'string', 'max:255'],
+            'department_id' => ['nullable', 'integer', 'exists:sm_human_departments,id'],
+            'sla' => ['nullable', Rule::in(['breached'])], 'reopened' => ['nullable', 'boolean'],
             'status' => ['nullable', Rule::in(['open', 'closed', 'pending', 'in_progress'])],
             'assigned_to' => ['nullable', 'integer', 'exists:sm_staffs,id'],
             'requester_id' => ['nullable', 'integer', 'exists:sm_staffs,id'],

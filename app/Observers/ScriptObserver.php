@@ -4,8 +4,9 @@ namespace App\Observers;
 
 use App\Models\Script;
 use App\Services\Notifications\MarketingNotificationService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class ScriptObserver
+class ScriptObserver implements ShouldHandleEventsAfterCommit
 {
     public function created(Script $script): void
     {

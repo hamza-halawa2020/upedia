@@ -22,7 +22,7 @@ trait Viewable
         ]);
 
         if (Schema::hasColumn($this->getTable(), 'views_count')) {
-            $this->increment('views_count');
+            static::withoutTimestamps(fn () => $this->increment('views_count'));
         }
 
         return $view;

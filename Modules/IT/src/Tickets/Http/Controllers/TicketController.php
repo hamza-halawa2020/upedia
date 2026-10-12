@@ -3,8 +3,10 @@
 namespace Modules\IT\Tickets\Http\Controllers;
 
 use App\Actions\Exports\DownloadExport;
+use App\Actions\Views\RecordModelView;
 use App\Models\Ticket;
 use App\Support\Api\ApiResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\IT\SavedTables\Actions\SaveExportTable;
 use Modules\IT\Tickets\Actions\DeleteTicket;
@@ -20,7 +22,8 @@ class TicketController extends Controller
     public function __construct()
     {
         $this->middleware('check.permission:it_tickets_index')->only(['index', 'export', 'saveFilteredTable']);
-        $this->middleware('check.permission:it_tickets_create')->only(['create', 'store', 'getStaffByDepartment', 'searchStaff', 'getStaffDetails']);
+        $this->middleware('check.permission:it_tickets_create')->only(['create', 'store']);
+        $this->middleware('check.any.permission:it_tickets_create,it_tickets_edit')->only(['getStaffByDepartment', 'searchStaff', 'getStaffDetails']);
         $this->middleware('check.permission:it_tickets_show')->only('show');
         $this->middleware('check.permission:it_tickets_edit')->only(['edit', 'update']);
         $this->middleware('check.permission:it_tickets_destroy')->only('destroy');
@@ -43,9 +46,12 @@ class TicketController extends Controller
         return redirect()->route('it.tickets.index')->with('success', 'Ticket created.');
     }
 
-    public function show(int $ticket, Tickets $query)
+    public function show(int $ticket, Tickets $query, Request $request, RecordModelView $recordView)
     {
-        return view('it::tickets.show', ['ticket' => $query->find($ticket)]);
+        $model = $query->find($ticket);
+        $recordView->handle($model, $request);
+
+        return view('it::tickets.show', ['ticket' => $model]);
     }
 
     public function edit(int $ticket, Tickets $query)

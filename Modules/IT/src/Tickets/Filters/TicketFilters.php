@@ -29,6 +29,16 @@ class TicketFilters
             $query->where('created_at', '<=', $data['end_date'].' 23:59:59');
         }
 
+        if (! empty($data['department_id'])) {
+            $query->whereHas('requester', fn ($staff) => $staff->where('department_id', $data['department_id']));
+        }
+        if (($data['sla'] ?? null) === 'breached') {
+            $query->whereNotIn('status', ['closed', 'resolved'])->whereNotNull('resolution_time')->where('resolution_time', '<', now());
+        }
+        if (! empty($data['reopened'])) {
+            $query->where('reopen_count', '>', 0);
+        }
+
         return $query;
     }
 }

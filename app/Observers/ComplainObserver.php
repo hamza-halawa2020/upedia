@@ -4,8 +4,9 @@ namespace App\Observers;
 
 use App\Models\Complain;
 use App\Services\Notifications\MarketingNotificationService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class ComplainObserver
+class ComplainObserver implements ShouldHandleEventsAfterCommit
 {
     public function created(Complain $complain): void
     {

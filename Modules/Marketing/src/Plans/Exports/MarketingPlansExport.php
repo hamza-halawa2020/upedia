@@ -2,17 +2,17 @@
 
 namespace Modules\Marketing\Plans\Exports;
 
+use App\Support\Exports\SafeValueBinder;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class MarketingPlansExport implements FromCollection, WithHeadings, WithMapping
+class MarketingPlansExport extends SafeValueBinder implements FromCollection, WithCustomValueBinder, WithHeadings, WithMapping
 {
-    public function __construct(private readonly Collection $plans)
-    {
-    }
+    public function __construct(private readonly Collection $plans) {}
 
     public function collection(): Collection
     {
@@ -37,4 +37,3 @@ class MarketingPlansExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 }
-

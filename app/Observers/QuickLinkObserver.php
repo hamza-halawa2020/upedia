@@ -4,8 +4,9 @@ namespace App\Observers;
 
 use App\Models\QuickLink;
 use App\Services\Notifications\MarketingNotificationService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class QuickLinkObserver
+class QuickLinkObserver implements ShouldHandleEventsAfterCommit
 {
     public function created(QuickLink $quickLink): void
     {

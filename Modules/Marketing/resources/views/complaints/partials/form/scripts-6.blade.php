@@ -120,8 +120,8 @@
                     error: function(xhr) {
                         setSubmittingState(false);
 
-                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            showAjaxErrors($form, xhr.responseJSON.errors);
+                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors && Object.keys(xhr.responseJSON.errors).length > 0) {
+                            showAjaxErrors($form, xhr.responseJSON.errors && Object.keys(xhr.responseJSON.errors).length > 0);
                             scrollToFirstError($form);
                             return;
                         }

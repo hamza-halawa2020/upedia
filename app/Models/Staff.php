@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \Illuminate\Database\Eloquent\Builder;
 
 class Staff extends Model
 {
     use HasFactory;
+
     protected $table = 'sm_staffs';
+
     protected static function booted()
     {
         static::addGlobalScope('active', function (Builder $builder) {
             $builder->where('active_status', '!=', 0);
         });
     }
-
 
     protected $fillable = [
         'staff_no',
@@ -91,7 +92,7 @@ class Staff extends Model
         'wallet_number',
         'work_from',
         'work_to',
-        'active_status'
+        'active_status',
 
     ];
 
@@ -100,6 +101,10 @@ class Staff extends Model
         return $this->belongsTo(SmHumanDepartment::class);
     }
 
+    public function manager()
+    {
+        return $this->belongsTo(self::class, 'manager_id');
+    }
 
     public function jobTitle()
     {

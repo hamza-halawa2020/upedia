@@ -12,3 +12,7 @@ Artisan::command('sessions:detect-expired' , function () {
     $this->call(App\Console\Commands\DetectExpiredSessions::class);
 })->everyThirtySeconds()
     ->withoutOverlapping();
+
+if (config('it.ticket_reminders_enabled')) {
+    \Illuminate\Support\Facades\Schedule::command('it:tickets:send-reminders')->everyMinute()->withoutOverlapping();
+}

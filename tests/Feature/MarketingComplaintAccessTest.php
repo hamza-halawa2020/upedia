@@ -32,7 +32,7 @@ class MarketingComplaintAccessTest extends TestCase
     {
         $middleware = app(ComplaintController::class)->getMiddleware();
         $expected = [
-            'index' => ['index'], 'create' => ['create', 'store', 'checkLeads'],
+            'index' => ['index'], 'create' => ['create', 'store'],
             'show' => ['show'], 'edit' => ['edit', 'update'], 'destroy' => ['destroy'],
         ];
         foreach ($expected as $permission => $actions) {

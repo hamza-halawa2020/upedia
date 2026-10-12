@@ -110,13 +110,13 @@
                                     <td class="text-center" onclick="event.stopPropagation()">
                                         <div class="complain-actions">
                                             <div class="ui-actions justify-content-center">
-{{--                                                @can('marketing_complains_show')--}}
+@can('marketing_complains_show')
                                                     <x-table-action type="view" :url="route('complains.show', $complain->id)" />
-{{--                                                @endcan--}}
+@endcan
 
-{{--                                                @can('marketing_complains_edit')--}}
+@can('marketing_complains_edit')
                                                     <x-table-action type="edit" :url="route('complains.edit', $complain->id)" />
-{{--                                                @endcan--}}
+@endcan
 
                                                 @can('marketing_complains_destroy')
                                                     <button

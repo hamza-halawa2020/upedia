@@ -4,8 +4,9 @@ namespace App\Observers;
 
 use App\Models\MarketingPlan;
 use App\Services\Notifications\MarketingNotificationService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class MarketingPlanObserver
+class MarketingPlanObserver implements ShouldHandleEventsAfterCommit
 {
     public function created(MarketingPlan $marketingPlan): void
     {
