@@ -1,0 +1,390 @@
+:root{
+  --sb-bg: #0f1724;
+  --sb-text: rgba(203,213,225,.92);
+  --sb-text-strong: rgba(255,255,255,.96);
+  --sb-muted: rgba(148,163,184,.85);
+  --sb-hover-bg: rgba(255,255,255,.055);
+  --sb-hover-bg-sub: rgba(255,255,255,.045);
+  --sb-active-bg: rgba(255,255,255,.065);
+  --sb-active-border: rgba(255,255,255,.06);
+  --sb-divider: rgba(255,255,255,.06);
+  --sidebar-w: 230px;
+}
+
+.sidebar {
+  width: 230px;
+  height: 100vh;
+  position: fixed;
+  background: var(--sb-bg);
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  box-shadow: none !important;
+  z-index: 10;
+font-family: 'IBM Plex Sans', sans-serif;
+
+}
+
+
+/* Sidebar Header */
+.sidebar-header {
+border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Logo Style */
+.sidebar-logo {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 30px;
+    font-weight: 900;  
+    text-transform: uppercase;    
+    line-height: 3rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.logo-accent {
+    background: linear-gradient(135deg, rgb(255, 130, 77), rgb(255, 199, 30));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+/* Hover Effect */
+.sidebar-logo:hover {
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+/* menu spacing */
+.sidebar-menu-area { padding: 12px 10px; }
+.sidebar-menu { list-style: none; margin: 0; padding: 0; }
+
+.sidebar-menu > li { margin-bottom: 4px; }
+
+/* top-level link */
+.sidebar-menu > li > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 0 !important;
+  border-radius: 12px;
+  box-shadow: none !important;
+  color: #e6eef6;
+  text-decoration: none;
+  transition: background .12s ease, transform .06s ease;
+}
+
+.sidebar-menu > li > a:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+/* icons */
+.sidebar-menu .menu-icon {
+  font-size: 18px;
+  color: #9fb0c0;
+}
+.sidebar-menu .titles {
+   font-size: .850rem;
+    line-height: 1.25rem;
+}
+.sidebar-menu .childTitles {
+   font-size: .800rem;
+    line-height: 1.15rem;
+}
+
+
+/* active */
+.sidebar-menu > li.active-page > a,
+.sidebar-menu > li > a.active-page {
+  background: rgba(255,255,255,0.04);
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.sidebar-menu > li.active-page > a .menu-icon,
+.sidebar-menu > li > a.active-page .menu-icon {
+  color: #cfe3ff;
+}
+
+/* submenu */
+.sidebar-submenu {
+  list-style: none;
+  margin: 6px 0 10px 12px;
+  padding: 6px 0;
+  /* border-left: 1px solid rgba(255,255,255,0.05); */
+}
+
+.sidebar-submenu li { margin: 2px 0; }
+
+.sidebar-submenu li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: background .12s ease;
+}
+
+.sidebar-submenu li a:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.sidebar-submenu li.active-page > a,
+.sidebar-submenu li a.active-page {
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+}
+
+/* close button */
+.sidebar-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: 0;
+  color: #9aa8b8;
+  cursor: pointer;
+  padding: 6px;
+}
+
+/* small screens behavior */
+@media (max-width: 900px) {
+  .sidebar--dark { transform: translateX(-110%); transition: transform .25s ease; }
+  .sidebar--dark.open { transform: translateX(0); }
+}
+
+/* Hide scrollbar everywhere but keep scroll working */
+* {
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE/Edge old */
+}
+
+*::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari */
+}
+
+/* make main content shift */
+.dashboard-main {
+  margin-left: var(--sidebar-w);
+}
+
+/* mobile: sidebar overlays, content no margin */
+@media (max-width: 900px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+}
+
+.menu-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #9fb0c0;
+}
+
+.sidebar-caret {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.sidebar-caret-icon {
+  margin-left: auto;
+  font-size: 18px;
+  color: #90a0b0;
+  transition: transform .18s ease;
+}
+
+.menu-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #9fb0c0;
+}
+
+
+
+/* Disable theme pseudo arrow (prevents double arrows) */
+.sidebar .sidebar-menu li.dropdown > a::after,
+.sidebar .sidebar-menu li.dropdown > a::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+
+/* Make dropdown row a stable flex row */
+.sidebar .sidebar-menu li.dropdown > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px;
+}
+
+
+.sidebar {
+  border-right: 0 !important;
+}
+.sidebar {
+  border-right: 0 !important;
+}
+
+/* =========================================================
+   ENTERPRISE SIDEBAR UI PACK (Copy/Paste at END of file)
+   - Removes blue hover/active
+   - Dark base + subtle hover lightening
+   - Clean active state with left indicator
+   - Consistent icons + arrows
+   ========================================================= */
+
+
+
+
+/* Kill any theme blue everywhere inside sidebar
+.sidebar .sidebar-menu a,
+.sidebar .sidebar-menu a *,
+.sidebar .sidebar-submenu a,
+.sidebar .sidebar-submenu a *{
+  color: var(--sb-text) !important;
+} */
+
+/* Layout & typography */
+.sidebar .sidebar-menu > li > a,
+.sidebar .sidebar-submenu li a{
+border-radius: 14px !important;
+  /* padding: 12px 14px !important; */
+  border: 0 !important;
+  /* background: rgba(255,255,255,.03) !important; */
+  /* border: 1px solid rgba(255,255,255,.05) !important; */
+    position: relative !important;
+  padding-left: 16px !important;
+  box-shadow: none !important;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.80) !important;
+}
+
+/* Hover: subtle lightening (no blue) */
+.sidebar .sidebar-menu > li > a:hover{
+  background: var(--sb-hover-bg) !important;
+  color: var(--sb-text-strong) !important;
+}
+
+/* Pressed */
+.sidebar .sidebar-menu > li > a:active{
+  transform: translateY(0.5px);
+}
+
+/* Icons */
+.sidebar .sidebar-menu .menu-icon{
+  color: var(--sb-muted) !important;
+  transition: color 160ms ease;
+}
+.sidebar .sidebar-menu > li > a:hover .menu-icon{
+  color: rgba(226,232,240,.95) !important;
+}
+
+/* ===== Active state (Enterprise) ===== */
+.sidebar .sidebar-menu > li.active-page > a,
+.sidebar .sidebar-menu > li > a.active-page{
+   background: rgba(255,255,255,.06) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Left indicator line */
+.sidebar .sidebar-menu > li.active-page > a::before,
+.sidebar .sidebar-menu > li > a.active-page::before{
+  content: "";
+  position: absolute;
+  left: 10px;            /* قربه/بعده حسب المطلوب */
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.25);
+}
+
+/* ===== Submenu ===== */
+.sidebar .sidebar-submenu{
+  border-left: 1px solid rgba(255,255,255,.07) !important;
+  margin-left: 14px !important;
+  padding-left: 10px !important;
+}
+
+.sidebar .sidebar-submenu li a{
+  /* border-radius: 12px !important;
+  padding: 9px 12px !important; */
+  background: transparent !important;
+  transition: background 160ms ease;
+}
+
+/* Submenu hover */
+.sidebar .sidebar-submenu li a:hover{
+  background: var(--sb-hover-bg-sub) !important;
+  color: var(--sb-text-strong) !important;
+}
+
+/* Submenu active */
+.sidebar .sidebar-submenu li.active-page > a,
+.sidebar .sidebar-submenu li a.active-page{
+  background: var(--sb-active-bg) !important;
+  box-shadow: inset 0 0 0 1px var(--sb-active-border) !important;
+  color: var(--sb-text-strong) !important;
+}
+
+/* ===== Caret / Arrow ===== */
+.sidebar .sidebar-caret{
+  margin-inline-start: auto;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sb-muted) !important;
+  background: transparent !important;
+  border-radius: 10px;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: transform 180ms ease, background 160ms ease, color 160ms ease;
+}
+
+.sidebar .sidebar-caret iconify-icon{
+  font-size: 18px;
+}
+
+.sidebar .sidebar-menu li.dropdown.open > a .sidebar-caret,
+.sidebar .sidebar-menu li.dropdown.dropdown-open > a .sidebar-caret,
+.sidebar .sidebar-menu li.dropdown > a[aria-expanded="true"] .sidebar-caret{
+  transform: rotate(0deg);
+  color: var(--sb-text-strong) !important;
+  background: rgba(255,255,255,.06) !important;
+}
+
+.sidebar .sidebar-menu li.dropdown > a:hover .sidebar-caret{
+  background: rgba(255,255,255,.04) !important;
+  color: rgba(226,232,240,.95) !important;
+}
+
+
+/* ===== Accessibility (no blue focus ring) ===== */
+.sidebar .sidebar-menu a:focus,
+.sidebar .sidebar-menu a:focus-visible{
+  outline: none !important;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.10) !important;
+}
+
+*, ::before, ::after {
+  border: none !important;
+}
+
+@media (max-width: 900px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+}

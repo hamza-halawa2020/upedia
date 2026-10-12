@@ -1,0 +1,31 @@
+<?php
+
+use App\Models\StudentInvoice;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('journal_entries', function (Blueprint $table) {
+            if (!Schema::hasColumn('journal_entries', 'student_invoice_id')) {
+                $table->foreignIdFor(StudentInvoice::class)
+                    ->nullable()
+                    ->after('reference_no')
+                    ->constrained()
+                    ->nullOnDelete();
+            }
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('journal_entries', function (Blueprint $table) {
+            if (Schema::hasColumn('journal_entries', 'student_invoice_id')) {
+                $table->dropConstrainedForeignId('student_invoice_id');
+            }
+        });
+    }
+};
